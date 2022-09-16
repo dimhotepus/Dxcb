@@ -1,0 +1,216 @@
+GC GreatCode 1.140 by Christophe Beaudet
+****************************************
+GC is available on SourceForge.net
+****************************************
+Type GC -help | -h | /? for options
+
+-------------------------------------------------------
+
+Syntax :
+[-no]-option-[parameter]  (current default value)
+-------------------------------------------------------
+No blank between optional [-no] and option
+No blank between option and its parameter
+Enclose the parameter with "" in case of blanks
+Example : GC -no-bak- -tab_size-8 -file-filename.c
+-------------------------------------------------------
+
+     -in_cfg-<filename>                                Read file.cfg to get options
+     -dir-<path>                                       Process all files of that directory (recursively)
+     -direx-<path>                                     Exclude directory of process
+     -file-<filename>                                  Process file
+     -fileex-<filename>                                Exclude file of process
+     -file_insert-<path/file>                          Add an include file for /*$I<num> */ comment. Order is important
+     -file_end_eol-<num>  (1, min 0)                   Number of EOL after last token of file
+[-no]-output-  (true)                                  Write result to file
+[-no]-output_test-  (false)                            Write result to file_test.???
+[-no]-overwrite_read_only-  (false)                    Can process read only files (change status)
+[-no]-verbose-  (true)                                 Display processing messages
+[-no]-bak-  (false)                                    Generate a backup file (inputfile.bak)
+     -tab_size-<num>  (4, min 0)                       Number of blanks in an indentation level
+[-no]-tab_out-  (true)                                 Generate tabulations in input file instead of blanks
+[-no]-eol_unix-  (false)                               Generate unix style EOL
+[-no]-space_if-  (false)                               Add a blank after if, while, for, do
+[-no]-space_return-  (false)                           Add a blank after return
+[-no]-space_fctcall-  (false)                          Add a blank after a function call
+[-no]-space_fctcall_firstparam-  (false)               Force a space before the first parameter of a function call
+[-no]-space_fctcall_lastparam-  (false)                Force a space after the last parameter of a function call
+[-no]-space_fctcall_inparam-  (true)                   Force a space after all the inside parameters of a function call
+[-no]-space_fctdecl_firstparam-  (false)               Force a space before the first parameter of a function decl
+[-no]-space_fctdecl_lastparam-  (false)                Force a space after the last parameter of a function decl
+[-no]-space_fctdef_firstparam-  (false)                Force a space before the first parameter of a function def
+[-no]-space_fctdef_lastparam-  (false)                 Force a space after the last parameter of a function def
+[-no]-space_fctdecl-  (false)                          Add a blank after a function declaration name
+[-no]-space_fctdef-  (false)                           Add a blank after a function definition name
+     -space_paren-<num>  (0, min 0)                    Number of spaces after '(' and before ')' if nested level of parentheses is less than argument
+[-no]-space_cast-  (false)                             Add spaces after '(' and before ')' for cast operators
+[-no]-space_cast_after-  (true)                        Force a space after a cast expression
+[-no]-space_scope_def-  (false)                        Force a space before and after :: in declaration
+[-no]-space_scope_access-  (false)                     Force a space before and after :: when accessing
+     -space_affect_style-<num>  (0, min 0)             Style of spaces for affect operators
+     -space_autoaffect_style-<num>  (0, min 0)         Style of spaces for auto-affect operators
+     -code_eol_after_close_brace-<num>  (0, min 0)     Number of blank lines after every close brace - except ones followed by else, while, etc
+     -code_len-<num>  (120, min 8)                     Maximum length of a line of code
+[-no]-code_keep_empty_lines-  (true)                   Keep or remove empty lines (no more than one line)
+[-no]-code_keep_more_empty_lines-  (false)             Try harder to keep existing empty lines
+     -code_remove_empty_lines-<num>  (2, min 1)        Remove all excess empty lines to the number specified between lines
+[-no]-code_split_bool_before-  (true)                  Prefer to split long expression before boolean operators
+     -code_split_fctcall_style-<num>  (0, min 0)       Split style of too long function calls
+     -code_split_fctdef_style-<num>  (0, min 0)        Split style of too long function definitions
+     -code_split_fctdecl_style-<num>  (0, min 0)       Split style of too long function declarations
+     -code_split_for_style-<num>  (0, min 0)           Split style of too long for statements
+     -code_split_if_style-<num>  (0, min 0)            Split style of too long if statements
+     -code_split_decl_style-<num>  (0, min 0)          Split style of variable declarations
+     -code_constructor_style-<num>  (0, min 0)         Split style of C++ constructors definition
+[-no]-code_decl_move_affect-  (false)                  Move affection in a declaration after the declaration bloc
+[-no]-code_decl_move_top-  (false)                     Move all declarations to the top of the statement
+[-no]-code_decl_access_to_type-  (false)               Move & and * just after the type when possible
+[-no]-code_decl_break_template-  (true)                Force a break line after a template declaration
+[-no]-code_decl_add_void-  (false)                     Force a "void" in function declaration if nothing is specified
+[-no]-code_wizard_indent-  (true)                      Indent code between devstudio appwizard special comments
+[-no]-code_force_return_paren-  (false)                Force enclose parenthesis in a return expression
+[-no]-code_remove_return_paren-  (false)               Remove all parentheses around a return parameter
+     -code_align_max_blanks-<num>  (1000, min 1)       The max number of blanks to add for a declaration alignment
+[-no]-code_def_fct_break_return_type-  (false)         Force a line break after the return type in a function definition
+[-no]-code_concat_strings-  (true)                     Concat adjacent string constants
+     -code_empty_fct_blanks-<num>  (1, min 0)          Number of blank lines in empty functions
+     -catch_eol_before-<num>  (1, min 0)               Number of eol before catch
+     -code_class_access_eol_before-<num>  (1, min 0)   Number of eol before class access
+     -code_class_access_eol_after-<num>  (1, min 0)    Number of eol after class access
+     -code_labels_eol_after-<num>  (1, min 0)          Number of eol after labels
+     -stmt_force_brace-<num>  (100, min 0)             Force a statement to be enclose with braces if its length exceed parameter
+[-no]-stmt_break_alone-  (false)                       Force an empty statement to be alone on its line
+[-no]-stmt_break_dowhile-  (false)                     Force a while of a do to be alone on its line
+[-no]-stmt_concat_if-  (true)                          Concat if, while, for for single statements
+[-no]-stmt_concat_else_2_stmt-  (false)                Concat else after the } statement
+[-no]-stmt_concat_if_and_else-  (false)                Concat if ... else ... constructs onto two lines - if possible
+[-no]-stmt_concat_else_if-  (true)                     Concat else and if into else if
+[-no]-stmt_concat_inline_class-  (false)               Concat if possible inline function body inside a class
+[-no]-stmt_concat_switch-  (true)                      Concat all cases of a switch if possible
+[-no]-stmt_concat_macros-  (true)                      Concat a macro statement if possible
+[-no]-stmt_concat_enum-  (true)                        Concat content of enum if possible
+[-no]-stmt_decl_remove_empty-  (true)                  Remove empty lines in declaration statements
+[-no]-stmt_concat_if_remove_empty-  (true)             Remove empty lines between concat if/while/for
+     -stmt_brace_style_class-<num>  (0, min 0)         Change indentation style of braces for class declaration
+     -stmt_brace_style_fct-<num>  (0, min 0)           Change indentation style of braces for function body
+     -stmt_brace_style_decl-<num>  (0, min 0)          Change indentation style of braces for declarations (struct, enum)
+     -stmt_brace_style-<num>  (0, min 0)               Change indentation style of braces for all other statements (if, while...)
+     -stmt_switch_style-<num>  (0, min 0)              Change indentation style of switch
+     -stmt_switch_eol-<num>  (0, min 0)                Change style of lines between cases
+     -stmt_class_indent-<num>  (0, min 0)              Number of additional indentation levels in a class declaration
+[-no]-stmt_namespace_indent-  (false)                  Indent one level a namespace statement
+[-no]-stmt_extern_c_indent-  (false)                   Indent one level an extern c statement
+     -stmt_static_init_style-<num>  (0, min 0)         Style of static initializations
+     -stmt_static_init_len-<num>  (80, min 0)          Max length of line when concat static init
+[-no]-pp_align_to_code-  (false)                       Align or not PP directive to the code just below
+     -pp_style-<num>  (0, min 0)                       Set indentation style of PP directives
+[-no]-pp_include_unix-  (true)                         Change backslash to slash in include directives
+[-no]-pp_align_breakline-  (false)                     Align break lines in multi lines macros
+     -cmt_fixme-                                       Specify the string for FIXME comment the default is "/* FIXME: Comment */"
+     -cmt_align_max_blanks-<num>  (20, min 1)          The max number of blanks to add for last line comments
+[-no]-cmt_dont_modify-  (false)                        Never touched comments (like $F directive but for all comments)
+     -cmt_keep-char_1-<char>  (                        Never touched comments like /**<char>
+     -cmt_keep-char_2-<char>  (                        Never touched comments like /**<char>
+     -cmt_keep-char_3-<char>  (                        Never touched comments like /**<char>
+     -cmt_keep-char_4-<char>  (                        Never touched comments like /**<char>
+     -cmt_keep-char_cpp_1-<char>  (                    Never touched comments like /**<char>
+     -cmt_keep-char_cpp_2-<char>  (                    Never touched comments like /**<char>
+     -cmt_keep-char_cpp_3-<char>  (                    Never touched comments like /**<char>
+     -cmt_keep-char_cpp_4-<char>  (                    Never touched comments like /**<char>
+[-no]-cmt_add_gc_tag-  (true)                          Add a /*$T */ mark at the beginning of file (if not already present)
+[-no]-cmt_add_file-  (true)                            Add a special comment at the beginning of file (if not already present)
+     -cmt_add_file_style-<num>  (0, min 0)             Special comment style at the beginning of file
+[-no]-cmt_add_fct_def-  (true)                         Add an empty comment before function definition (if not already present)
+[-no]-cmt_add_fct_def_class-  (true)                   Add an empty comment before inline function in class (if not already present)
+     -cmt_trailing_style-<num>  (0, min 0)             Trailing comment style
+[-no]-cmt_split_before_@_in_fct_cmts-  (false)         Split comments before '@'
+[-no]-cmt_add_class_access-  (true)                    Add an empty comment before class access (if not already present)
+[-no]-cmt_first_space_cpp-  (true)                     Force a space after the opening comment delimiter '//'
+[-no]-cmt_keep_cpp-  (false)                           Keep C++ comments in code
+[-no]-cmt_force_fct_def_decl_split-  (false)           Force function definitions and declarations to split
+[-no]-cmt_java_doc-  (false)                           Enable the java doc type comments
+[-no]-cmt_fct_java_doc-  (false)                       Enable the java doc type comments for functions
+[-no]-cmt_c2cpp-  (false)                              Convert all C comments to the C++ form
+[-no]-cmt_cpp2c_keep_eol-  (true)                      When converting C++ comments to C, replace EOL with GC break line character)
+     -cmt_fct_categ-<word>                             Add a special keyword for function declaration comments
+     -cmt_fct_categ_in-<word>                          Add a special keyword for parameters description in a function declaration comment
+     -cmt_fct_categ_style-<num>  (0, min 0)            Style for special words in comments
+[-no]-cmt_decl-  (true)                                Add separators in local variable declaration (before and/or after)
+     -cmt_decl_max_level-<num>  (100, min 0)           -cmt_decl- option is valid for declaration in a statement level < that value
+[-no]-cmt_decl_before-  (true)                         Add a separator before local declarations
+     -cmt_decl_len-<num>  (120, min 0)                 Length of separators in a local declaration
+[-no]-cmt_decl_auto_len-  (true)                       Compute length of the declaration separator depending of code
+     -cmt_decl_auto_len_add-<num>  (0, min 0)          Add additional blanks to that length
+[-no]-cmt_first_line_break_first-  (true)              Add an EOL after begin mark of a first line comment
+[-no]-cmt_first_line_break_last-  (true)               Add an EOL before end mark of a first line comment
+[-no]-cmt_first_line_fill_star-  (true)                Add a star at the beginning of each lines of a first line comment
+     -cmt_first_line_len-<num>  (80, min 8)            Maximum length of a first line comment
+[-no]-cmt_first_line_concat-  (true)                   Concat adjacent first line comments
+[-no]-cmt_first_line_blank-  (true)                    Add an empty line between two adjacent first line comments
+     -cmt_sep_len-<num>  (120, min 8)                  Maximum length for separators
+[-no]-cmt_sep_fill_star-  (false)                      Add a star at the beginning of all lines of a separator
+[-no]-cmt_sep_break-  (true)                           Force /* and */ to be alone on their lines for separators
+     -cmt_sep_char_1-<char>  (~)                       Filling character for /*$1 */ separator
+     -cmt_sep_char_2-<char>  (-)                       Filling character for /*$2 */ separator
+     -cmt_sep_char_3-<char>  (=)                       Filling character for /*$3 */ separator
+     -cmt_sep_char_4-<char>  (*)                       Filling character for /*$4 */ separator
+     -cmt_sep_char_5-<char>  (#)                       Filling character for /*$5 */ separator
+     -cmt_sep_char_6-<char>  (+)                       Filling character for /*$6 */ separator
+     -cmt_sep_char_split-<char>  (;)                   Change the GC break line character in comments
+     -cmt_sep_eol_before-<num>  (0, min 0)             Number of blank lines before a single line comment
+     -cmt_sep_eol_after-<num>  (0, min 0)              Number of blank lines after a single line comment
+     -cmt_sep_eol_before_1-<num>  (1, min 0)           Number of blank lines before a comment separator /*$1 ... */
+     -cmt_sep_eol_after_1-<num>  (1, min 0)            Number of blank lines after a comment separator /*$1 ... */
+     -cmt_sep_eol_before_2-<num>  (1, min 0)           Number of blank lines before a comment separator /*$2 ... */
+     -cmt_sep_eol_after_2-<num>  (1, min 0)            Number of blank lines after a comment separator /*$2 ... */
+     -cmt_sep_eol_before_3-<num>  (1, min 0)           Number of blank lines before a comment separator /*$3 ... */
+     -cmt_sep_eol_after_3-<num>  (1, min 0)            Number of blank lines after a comment separator /*$3 ... */
+     -cmt_sep_eol_before_4-<num>  (1, min 0)           Number of blank lines before a comment separator /*$4 ... */
+     -cmt_sep_eol_after_4-<num>  (1, min 0)            Number of blank lines after a comment separator /*$4 ... */
+     -cmt_sep_eol_before_5-<num>  (1, min 0)           Number of blank lines before a comment separator /*$5 ... */
+     -cmt_sep_eol_after_5-<num>  (1, min 0)            Number of blank lines after a comment separator /*$5 ... */
+     -cmt_sep_eol_before_6-<num>  (2, min 0)           Number of blank lines before a comment separator /*$6 ... */
+     -cmt_sep_eol_after_6-<num>  (2, min 0)            Number of blank lines after a comment separator /*$6 ... */
+     -cmt_sep_eol_before_fct_def-<num>  (1, min 0)     Number of blank lines before a function definition comment
+     -cmt_sep_force_fct_proto-<num>  (0, min 0)        Force a comment before a function prototype to be a separator. <num> is separator level, 0 for none
+     -cmt_sep_force_fct_macro-<num>  (3, min 0)        Force a comment before a macro to be a separator. <num> is separator level, 0 for none
+     -cmt_sep_force_fct_def-<num>  (3, min 0)          Force a comment before a function to be a separator. <num> is separator level, 0 for none
+     -cmt_sep_force_class_access-<num>  (2, min 0)     Force a comment before a class access (public, private, protected) to be a separator. <num> is separator level, 0 for none
+     -cmt_sep_force_struct-<num>  (2, min 0)           Force a comment before a struct declaration. <num> is separator level, 0 for none
+     -cmt_sep_force_class-<num>  (3, min 0)            Force a comment before a class declaration. <num> is separator level, 0 for none
+     -token_ext-<C/C++ keyword>$<user keyword>         Force user keyword to be indent as C/C++ keyword
+[-no]-replace_on-  (true)                              Toggle replace mode on/off
+     -replace-<word to replace>$<replacement word>     Replace a word by another
+[-no]-dependencies-  (false)                           Activate process of dependencies
+[-no]-dependencies_all-  (false)                       Activate complex process of dependencies
+     -dependencies_dir-<path>                          Add an include path for the processing of dependencies
+[-no]-dependencies_dir_rec-  (false)                   Include path are recurs scan for the processing of dependencies
+
+Configuration files (optional)
+-------------------------------
+
+GC.lst					You can specify a list of files to indent (one per line)
+                        Use -file-???? option syntax for each file
+GC.cfg			        You can specify a list of options (one per line)
+
+Special comments you can write in your code
+-------------------------------------------
+
+/*$<num> ... */         Insert separator number <num>
+                        The filling character must have been defined with a -cmt_sep_char_<num>- option
+/*$<num>- ... */        Insert a single line separator number <num>
+                        The filling character must have been defined with a -cmt_sep_char_<num>- option
+/*$T */                 Add GC mark (GC version, file, date, time) at the beginning of file
+/*$F ... */             Do not indent the comment
+/*$off*/                Do not indent code below
+/*$on*/                 Indent code below
+/*$I<num> */            Insert file number <num> in the comment
+                        The file must have been defined with the -file_insert- option
+/*$S ... */             Force a first line comment to have split form
+/*$O-option- */         To change a GC option for the current file
+/**/                    Before a function definition, GC will not add a comment separator
+/*<word>:$*/            Before a function definition, insert all parameters in the comment
+                        <word> must have been defined with -cmt_fct_categ_in- option
+/*... <word>: ... */    Special indentation if <word> has been defined with -cmt_fct_categ- option
+/*... <char> ... */     Force an EOL just after <char> if <char> has been defined with the -cmt_sep_char_split option
+

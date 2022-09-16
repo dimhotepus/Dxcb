@@ -1,0 +1,60 @@
+This copy of the DirectXCommandBufferLib notices is provided for your convenience from Emergent Game Technologies ("EGT").  In case of any discrepancy between this copy and the notices in the file DirectXCommandBufferLib.zip that is included in the DirectXCommandBufferLib distribution, the latter shall prevail.
+
+COPYRIGHT NOTICE, DISCLAIMER, and LICENSE:
+--------------------------------------------------
+
+If you modify DirectXCommandBufferLib you may insert additional notices immediately following this sentence.
+
+DirectXCommandBufferLib version 1.0, 2008, Copyright 2008 Emergent Game Technologies.
+
+For the purposes of this copyright and license, "Contributing Authors" is defined as the following set of individuals:
+
+   Vincent Scheib
+   Bo Wilson
+
+PERMISSION FOR USE:
+--------------------------------------------------
+
+The DirectXCommandBufferLib Library is supplied "AS IS".  The Contributing Authors and EGT disclaim all warranties, expressed or implied, including, without limitation, the warranties of merchantability and of fitness for any purpose. The Contributing Authors and EGT assume no liability for direct, indirect, incidental, special, exemplary, or consequential damages, which may result from the use of the DirectXCommandBufferLib Library, even if advised of the possibility of such damage.
+
+Permission is hereby granted to use, copy, modify, and distribute this source code, or portions hereof, for any purpose, without fee, subject to the following restrictions:
+
+1. The origin of this source code must not be misrepresented.
+
+2. Altered versions must be plainly marked as such and must not be misrepresented as being the original source.
+
+3. This Copyright notice may not be removed or altered from any source or altered source distribution.
+
+4. EGT must be credited in products using the DirectXCommandBufferLib Library, as described below in NOTIFICATION.
+
+5. Changes to the library should be returned to EGT, so the most recent version can be available to the community for supporting parallel rendering development, as described below in UPDATES.
+
+THIRD-PARTY CODE:
+--------------------------------------------------
+
+Versions of the Program have code proprietary to various third party partners of EGT via license, notably Microsoft Corporation, as per "MICROSOFT LICENSE TERMS MICROSOFT DIRECTX SOFTWARE DEVELOPMENT KIT (SDK)", section 2.b ("ADDITIONAL LICENSING REQUIREMENTS AND/OR USE RIGHTS").
+
+NOTIFICATION:
+--------------------------------------------------
+
+The Contributing Authors and EGT specifically permit, without fee, and encourage the use of this source code as a component to supporting parallel rendering, or similar rendering optimizations and features, in commercial products.  If you use this source code in a product, acknowledgment is required and appreciated.
+
+Any credits, splash or similar screen shall display the Emergent logo or Powered by Gamebryo logo at startup, as well as text indicating that the Licensee Application contains the applicable Product from Emergent.
+
+The Gamebryo logo is supplied for us in splash screens for projects using the DirectXCommandBufferLib Library in the files "Gamebryo_logo_lt_bgrnd.jpg" (white background) and "Gamebryo_logo_dk_bgrnd.jpg" (black background). (Additional image source files are available upon request.)
+
+The following is appropriate copyright notice:
+
+   Copyright 2008 Emergent Game Technologies. All Rights Reserved.
+
+UPDATES:
+--------------------------------------------------
+
+Changes to the library files in /DirectXCommandBufferLib should be returned to EGT (DirectXCommandBufferLib<<<remove-this-anti-spam-text>>>@emergent.net), and the most recent version of this library can be found at http://www.emergent.net/GameFest2008/. Changes to /DXSamples do not need to be returned, but must conform to restrictions under "THIRD-PARTY CODE" above.
+
+LICENSE QUESTIONS:
+--------------------------------------------------
+
+Adam Creighton
+Adam.Creighton<<<remove-this-anti-spam-text>>>@emergent.net
+July 11, 2008
