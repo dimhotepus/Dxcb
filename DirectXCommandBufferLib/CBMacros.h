@@ -1,20 +1,8 @@
-// EMERGENT GAME TECHNOLOGIES PROPRIETARY INFORMATION
-//
-// This software is supplied under the terms of a license agreement or
-// nondisclosure agreement with Emergent Game Technologies and may not 
-// be copied or disclosed except in accordance with the terms of that 
-// agreement.
-//
-//      Copyright (c) 1996-2008 Emergent Game Technologies.
-//      All Rights Reserved.
-//
-// Emergent Game Technologies, Chapel Hill, North Carolina 27517
-// http://www.emergent.net
+// Open source.
+// See Vincent Scheib rant at http://beautifulpixels.blogspot.com/2008/07/parallel-rendering-with-directx-command.html
 
-#pragma once
-#ifndef CBMACROS_H
-#define CBMACROS_H
-
+#ifndef DIRECTX_COMMAND_BUFFER_CBMACROS_H_
+#define DIRECTX_COMMAND_BUFFER_CBMACROS_H_
 
 #define MEMTRACE 0
 #define VERBOSE 0
@@ -143,18 +131,18 @@
     FUNCTIONNAME_DEBUG_TRACE2()\
     type0 arg0; m_pCB->GetDWORD(&arg0);\
     type2 arg2; m_pCB->GetDWORD(&arg2);\
-    int iSize = arg2*4*sizeof( arraytype );\
-    type1 arg1 = (type1) m_pCB->DoGetMem(iSize);\
+    const DWORD iSize = arg2 * 4 * sizeof(arraytype);\
+    type1 arg1{m_pCB->DoGetMem<std::remove_pointer_t<type1>>(iSize)};\
     if(FAILED( m_pDevice->name(arg0,arg1,arg2) ))\
         OutputDebugStringA(__FUNCTION__ " failed in playback\n");\
 }
 
 //---------------------------------------------------------------------------
 // Get and Put macros
-#define PUTDWORD( type0 ) void PutDWORD( type0  arg ) { DoPutDWORD( (DWORD) arg); }
-#define PUTOBJ( type0 ) void PutDWORD( type0* arg ) { DoPutMem((DWORD *)arg, sizeof( type0 )); }
-#define GETDWORD( type0 ) void GetDWORD( type0* arg ) { *arg = ( type0 ) DoGetDWORD(); }
-#define GETOBJ( type0 ) void GetDWORD( type0** arg ) { DWORD *temp = DoGetMem(sizeof( type0 )); *arg = reinterpret_cast< type0* >( temp ); }
+#define PUTDWORD( type0 ) void PutDWORD( type0  arg ) { static_assert(sizeof(arg) <= sizeof(DWORD)); DoPutDWORD( (DWORD) arg); }
+#define PUTOBJ( type0 ) void PutDWORD( type0* arg ) { DoPutMem(arg, sizeof( type0 )); }
+#define GETDWORD( type0 ) void GetDWORD( type0* arg ) { static_assert(sizeof(*arg) <= sizeof(DWORD)); *arg = ( type0 ) DoGetDWORD(); }
+#define GETOBJ( type0 ) void GetDWORD( type0** arg ) { *arg = DoGetMem<type0>(sizeof( type0 )); }
 #define GET_AND_PUT_OBJ( type0 )    GETOBJ( type0 )   PUTOBJ( type0 )
 #define GET_AND_PUT_DWORD( type0 )  GETDWORD( type0 ) PUTDWORD( type0 )
 
@@ -169,19 +157,19 @@
 #define  MEMSIZECHECK( AvailableMemory, iSize )  { if(g_bMemoryTrace)\
 {\
     char temp[300];\
-    sprintf_s(temp,299,"%d available memory checked for size %d\n",(DWORD)AvailableMemory,(DWORD)iSize);\
+    sprintf_s(temp,299,"%lu available memory checked for size %lu\n",(DWORD)AvailableMemory,(DWORD)iSize);\
     OutputDebugStringA( temp );\
     if (iSize<0)\
         OutputDebugStringA(" negative size!!\n");\
 } }
 #else
-#define  DEBUGGET( fname, returnvalue, originalnextptr, nextptr );
-#define  DEBUGPUT( fname, returnvalue, originalnextptr, nextptr );
+#define  DEBUGGET( fname, returnvalue, originalnextptr, nextptr )
+#define  DEBUGPUT( fname, returnvalue, originalnextptr, nextptr )
 #define  MEMSIZECHECK( AvailableMemory, iSize )
 #endif
 
 
-typedef UINT*   LPUINT;
-typedef D3DCAPS9*   LPD3DCAPS9;
+using LPUINT = UINT*;
+using LPD3DCAPS9 = D3DCAPS9*;
 
-#endif //CBMACROS_H_
+#endif // DIRECTX_COMMAND_BUFFER_CBMACROS_H_

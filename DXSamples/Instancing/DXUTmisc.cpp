@@ -1121,7 +1121,7 @@ void WINAPI DXUTGetDesktopResolution( UINT AdapterOrdinal, UINT* pWidth, UINT* p
 //--------------------------------------------------------------------------------------
 // Display error msg box to help debug 
 //--------------------------------------------------------------------------------------
-HRESULT WINAPI DXUTTrace( const CHAR* strFile, DWORD dwLine, HRESULT hr,
+HRESULT WINAPI DXUTTrace( const WCHAR* strFile, DWORD dwLine, HRESULT hr,
                           const WCHAR* strMsg, bool bPopMsgBox )
 {
     bool bShowMsgBoxOnError = DXUTGetShowMsgBoxOnError();

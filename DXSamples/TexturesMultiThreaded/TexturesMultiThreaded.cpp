@@ -8,10 +8,7 @@
 #include <mmsystem.h>
 #include <stdlib.h>
 #include <d3dx9.h>
-#pragma warning( disable : 4996 ) // disable deprecated warning 
 #include <strsafe.h>
-#pragma warning( default : 4996 ) 
-#pragma warning( disable : 4244 ) 
 
 #include "DXUT.h"
 #include "DXUTgui.h"
@@ -283,6 +280,8 @@ class AverageFPS
 public:
     AverageFPS()
     {
+        frameCount = 0;
+        startTime.QuadPart = thisTime.QuadPart = 0;
         QueryPerformanceFrequency(&frequency);
         Reset();
     }
@@ -366,7 +365,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
     }
 
     for(int i=0;i<g_AccessBufferSize;i++)
-        g_dwAccess[g_AccessBufferSize] = ((rand()*g_CommandBufferSize)/RAND_MAX) % g_CommandBufferSize;
+        g_dwAccess[i] = (rand()*(g_CommandBufferSize)/RAND_MAX) % g_CommandBufferSize;
 
     InValidateAllBuffers();
 
@@ -668,7 +667,7 @@ HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strFileName, ID3DXMesh** 
     // so when rendering the mesh's triangle list the vertices will 
     // cache hit more often so it won't have to re-execute the vertex shader 
     // on those vertices so it will improve perf.     
-    rgdwAdjacency = new DWORD[pMesh->GetNumFaces() * 3];
+    rgdwAdjacency = new (std::nothrow) DWORD[pMesh->GetNumFaces() * 3];
     if( rgdwAdjacency == NULL )
         return E_OUTOFMEMORY;
     V( pMesh->GenerateAdjacency(1e-6f,rgdwAdjacency) );
@@ -865,13 +864,6 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
     if(g_bAutoTesting && g_bInAutoTesting && g_pOutputFile)
     {
         ShowSliders(false);
-
-        LARGE_INTEGER currentTime;
-        QueryPerformanceCounter(&currentTime);
-        
-        LARGE_INTEGER elapsedSinceStartTimeINT;
-        elapsedSinceStartTimeINT.QuadPart = currentTime.QuadPart - g_TestStartTime.QuadPart;
-        double elapsedSinceStartTime = elapsedSinceStartTimeINT.QuadPart / (double)g_lFrequency.QuadPart;
 
         switch (g_SampleStablizationState)
         {
@@ -1179,7 +1171,7 @@ void UpdateFromNumberThreadsSliderChange()
         g_bMultiThread = true;
         g_dwNumberofRecordThreads_toBeSet = dwThreads;
     }
-    StringCchPrintf( wszOutput, 1024, L"Number of Worker Threads: %d",
+    StringCchPrintf( wszOutput, 1024, L"Number of Worker Threads: %lu",
                 dwThreads );
     g_UI.GetStatic( IDC_LABEL )->SetText( wszOutput );
     int NumberDPs = CalculateDPs( );
@@ -1200,7 +1192,7 @@ void UpdateFromNumberDPsSliderChange()
         g_bMultiThread = bMultiThread;
         g_dwNumberofRecordThreads_toBeSet = dwThreads;
     }
-    StringCchPrintf( wszOutput, 1024, L"Number of Worker Threads: %d",
+    StringCchPrintf( wszOutput, 1024, L"Number of Worker Threads: %lu",
                 dwThreads );
     g_UI.GetStatic( IDC_LABEL )->SetText( wszOutput );
     int NumberDPs = CalculateDPs( ); 
@@ -1233,7 +1225,7 @@ void UpdateFromCPUWorkPerDPSliderChange(DWORD dwCPUWorkPerDP )
 {               
     WCHAR wszOutput[1024];
     g_dwCPULoops = dwCPUWorkPerDP;
-    StringCchPrintf( wszOutput, 1024, L"Target CPU Load per Draw: %d",dwCPUWorkPerDP);
+    StringCchPrintf( wszOutput, 1024, L"Target CPU Load per Draw: %lu",dwCPUWorkPerDP);
     g_UI.GetStatic( IDC_LABELCPU )->SetText( wszOutput );
 }
 
@@ -1348,7 +1340,7 @@ void OutputData(FILE *pfile,int CPUBusyLoops,int DrawPrimitives,int Threads,floa
 bool OpenDataFile(char *fname)
 {
     fopen_s(&g_pOutputFile,fname,"a");
-    fprintf(g_pOutputFile,"\n");
+    if (g_pOutputFile) fprintf(g_pOutputFile,"\n");
     return g_pOutputFile!=NULL;
 }
 
@@ -1858,11 +1850,9 @@ VOID Render(D3DXVECTOR3 * pvOffSet,DWORD dwPhase,IDirect3DDevice9 *pDevice,DWORD
 
         if(QueryPerformanceCounter( &g_EndPerformanceCount ))
         {
-            LARGE_INTEGER time;
-            time.QuadPart = (g_EndPerformanceCount.QuadPart - g_StartPerformanceCount.QuadPart);
-            LONGLONG dtime = g_lFrequency.QuadPart / 1000000 ;
-            __int64 mseconds = time.QuadPart/dtime;
-            g_fDrawCost = mseconds;
+            LONGLONG time = (g_EndPerformanceCount.QuadPart - g_StartPerformanceCount.QuadPart);
+            float dtime = g_lFrequency.QuadPart / 1000000.0F;
+            g_fDrawCost = time/dtime;
         }
     }
     if(g_bCheckDrawTime)
@@ -1915,12 +1905,12 @@ VOID Render(DWORD nParam,IDirect3DDevice9 *pDevice,bool bMultiThread)
 
 
 //use 40.0 for the double for loop bound for debug builds.
-#define INNERLOOPDEBUG   for(double i=0.0f;i<4.0;i++)                                                  \
+#define INNERLOOPDEBUG   for(int i=0;i<4;i++)                                                           \
                     {                                                                                   \
                         int index = g_dwAccess[g_dwAccessCounter % g_AccessBufferSize];                 \
                         g_dwAccessCounter += 1;                                                         \
                         g_dwAccessCounter %= g_AccessBufferSize;                                        \
-                        int memindex = index % g_CommandBufferSize;                                     \
+                        [[maybe_unused]] int memindex = index % g_CommandBufferSize;                    \
                         DWORD dwValue =   g_dwMemory[index];                                            \
                         f = sqrt( f + 2.0f*((float)dwValue) );                                          \
                     }                                                                                   \
@@ -1931,7 +1921,6 @@ VOID Render(DWORD nParam,IDirect3DDevice9 *pDevice,bool bMultiThread)
 void CPUActive()
 {
     int loops = 0;
-    float  fCurrentMicroSeconds = 0.0f;
     double f = 123.0;
     while( loops <  g_dwCPULoops)
     {
@@ -1954,11 +1943,9 @@ float MeasureCPUActive()
             INNERLOOP
         }
         QueryPerformanceCounter( &EndPerformanceCount );
-        LARGE_INTEGER time;
-        time.QuadPart = (EndPerformanceCount.QuadPart - StartPerformanceCount.QuadPart);
-        LONGLONG dtime = g_lFrequency.QuadPart / 1000000 ;
-        __int64 mseconds = time.QuadPart/dtime;
-        float fCurrentMicroSeconds = mseconds;
+        LONGLONG time = (EndPerformanceCount.QuadPart - StartPerformanceCount.QuadPart);
+        float dtime = g_lFrequency.QuadPart / 1000000.0F ;
+        float fCurrentMicroSeconds = time/dtime;
 #define DOTRACE 0
 #if DOTRACE
     char sOutput[1024];

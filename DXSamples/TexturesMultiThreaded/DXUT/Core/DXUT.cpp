@@ -670,8 +670,8 @@ HWND WINAPI DXUTGetHWNDDeviceWindowed()                    { return GetDXUTState
 RECT WINAPI DXUTGetWindowClientRect()                      { RECT rc; GetClientRect( DXUTGetHWND(), &rc ); return rc; }
 LONG WINAPI DXUTGetWindowWidth()                           { RECT rc = DXUTGetWindowClientRect(); return ((LONG)rc.right - rc.left); }
 LONG WINAPI DXUTGetWindowHeight()                          { RECT rc = DXUTGetWindowClientRect(); return ((LONG)rc.bottom - rc.top); }
-RECT WINAPI DXUTGetWindowClientRectAtModeChange()          { RECT rc = { 0, 0, GetDXUTState().GetWindowBackBufferWidthAtModeChange(), GetDXUTState().GetWindowBackBufferHeightAtModeChange() }; return rc; }
-RECT WINAPI DXUTGetFullsceenClientRectAtModeChange()       { RECT rc = { 0, 0, GetDXUTState().GetFullScreenBackBufferWidthAtModeChange(), GetDXUTState().GetFullScreenBackBufferHeightAtModeChange() }; return rc; }
+RECT WINAPI DXUTGetWindowClientRectAtModeChange()          { RECT rc = { 0, 0, static_cast<long>(GetDXUTState().GetWindowBackBufferWidthAtModeChange()), static_cast<long>(GetDXUTState().GetWindowBackBufferHeightAtModeChange()) }; return rc; }
+RECT WINAPI DXUTGetFullsceenClientRectAtModeChange()       { RECT rc = { 0, 0, static_cast<long>(GetDXUTState().GetFullScreenBackBufferWidthAtModeChange()), static_cast<long>(GetDXUTState().GetFullScreenBackBufferHeightAtModeChange()) }; return rc; }
 double WINAPI DXUTGetTime()                                { return GetDXUTState().GetTime(); }
 float WINAPI DXUTGetElapsedTime()                          { return GetDXUTState().GetElapsedTime(); }
 float WINAPI DXUTGetFPS()                                  { return GetDXUTState().GetFPS(); }
@@ -2320,8 +2320,8 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
     // to prevent accidental task switching
     DXUTAllowShortcutKeys( ( DXUTGetIsWindowedFromDS(pNewDeviceSettings) ) ? GetDXUTState().GetAllowShortcutKeysWhenWindowed() : GetDXUTState().GetAllowShortcutKeysWhenFullscreen() );
 
-    HMONITOR hAdapterMonitor = DXUTGetMonitorFromAdapter( pNewDeviceSettings );
-    GetDXUTState().SetAdapterMonitor( hAdapterMonitor );
+    HMONITOR hAdapterMonitor1 = DXUTGetMonitorFromAdapter( pNewDeviceSettings );
+    GetDXUTState().SetAdapterMonitor( hAdapterMonitor1 );
 
     // Update the device stats text
     DXUTUpdateStaticFrameStats();
@@ -2407,8 +2407,8 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
             // Get the rect of the monitor attached to the adapter
             MONITORINFO miAdapter;
             miAdapter.cbSize = sizeof(MONITORINFO);
-            HMONITOR hAdapterMonitor = DXUTGetMonitorFromAdapter( pNewDeviceSettings );
-            DXUTGetMonitorInfo( hAdapterMonitor, &miAdapter );
+            HMONITOR hAdapterMonitor2 = DXUTGetMonitorFromAdapter( pNewDeviceSettings );
+            DXUTGetMonitorInfo( hAdapterMonitor2, &miAdapter );
             HMONITOR hWindowMonitor = DXUTMonitorFromWindow( DXUTGetHWND(), MONITOR_DEFAULTTOPRIMARY );
 
             // Get the rect of the window
@@ -2421,7 +2421,7 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
                  rcWindow.top    < miAdapter.rcWork.top   ||
                  rcWindow.bottom > miAdapter.rcWork.bottom) )
             {
-                if( hWindowMonitor == hAdapterMonitor && IsZoomed(DXUTGetHWNDDeviceWindowed()) )
+                if( hWindowMonitor == hAdapterMonitor2 && IsZoomed(DXUTGetHWNDDeviceWindowed()) )
                 {
                     // If the window is maximized and on the same monitor as the adapter, then 
                     // no need to clip to single adapter as the window is already clipped 
@@ -2449,8 +2449,8 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
             // Get the rect of the monitor attached to the adapter
             MONITORINFO miAdapter;
             miAdapter.cbSize = sizeof(MONITORINFO);
-            HMONITOR hAdapterMonitor = DXUTGetMonitorFromAdapter( pNewDeviceSettings );
-            DXUTGetMonitorInfo( hAdapterMonitor, &miAdapter );
+            HMONITOR hAdapterMonitor2 = DXUTGetMonitorFromAdapter( pNewDeviceSettings );
+            DXUTGetMonitorInfo( hAdapterMonitor2, &miAdapter );
 
             // Get the rect of the monitor attached to the window
             MONITORINFO miWindow;
@@ -4798,15 +4798,9 @@ void DXUTAllowShortcutKeys( bool bAllowKeys )
         // Set low level keyboard hook if haven't already
         if( GetDXUTState().GetKeyboardHook() == NULL )
         {
-            // Set the low-level hook procedure.  Only works on Windows 2000 and above
-            OSVERSIONINFO OSVersionInfo;
-            OSVersionInfo.dwOSVersionInfoSize = sizeof(OSVersionInfo);
-            GetVersionEx(&OSVersionInfo);
-            if( OSVersionInfo.dwPlatformId == VER_PLATFORM_WIN32_NT && OSVersionInfo.dwMajorVersion > 4 )
-            {
-                HHOOK hKeyboardHook = SetWindowsHookEx( WH_KEYBOARD_LL, DXUTLowLevelKeyboardProc, GetModuleHandle(NULL), 0 );
-                GetDXUTState().SetKeyboardHook( hKeyboardHook );
-            }
+            // Set the low-level hook procedure.
+            HHOOK hKeyboardHook = SetWindowsHookEx( WH_KEYBOARD_LL, DXUTLowLevelKeyboardProc, GetModuleHandle(NULL), 0 );
+            GetDXUTState().SetKeyboardHook( hKeyboardHook );
         }
 
         // Disable StickyKeys/etc shortcuts but if the accessibility feature is on, 
@@ -5333,9 +5327,9 @@ void DXUTResizeDXGIBuffers( UINT Width, UINT Height, BOOL bFullScreen )
             hr = DXUTERR_RESETTINGDEVICEOBJECTS;
 
         GetDXUTState().SetInsideDeviceCallback( true );
-        LPDXUTCALLBACKD3D10SWAPCHAINRELEASING pCallbackSwapChainReleasing = GetDXUTState().GetD3D10SwapChainReleasingFunc();
-        if( pCallbackSwapChainReleasing != NULL )
-            pCallbackSwapChainReleasing( GetDXUTState().GetD3D10SwapChainResizedFuncUserContext() );
+        LPDXUTCALLBACKD3D10SWAPCHAINRELEASING pCallbackSwapChainReleasing2 = GetDXUTState().GetD3D10SwapChainReleasingFunc();
+        if( pCallbackSwapChainReleasing2 != NULL )
+            pCallbackSwapChainReleasing2( GetDXUTState().GetD3D10SwapChainResizedFuncUserContext() );
         GetDXUTState().SetInsideDeviceCallback( false );
         DXUTPause( false, false );
         PostQuitMessage( 0 );
@@ -5411,8 +5405,8 @@ void DXUTCheckForWindowChangingMonitors()
 
     HRESULT hr;
     HMONITOR hWindowMonitor = DXUTMonitorFromWindow( DXUTGetHWND(), MONITOR_DEFAULTTOPRIMARY );
-    HMONITOR hAdapterMonitor = GetDXUTState().GetAdapterMonitor();
-    if( hWindowMonitor != hAdapterMonitor )
+    HMONITOR hAdapterMonitor1 = GetDXUTState().GetAdapterMonitor();
+    if( hWindowMonitor != hAdapterMonitor1 )
     {
         UINT newOrdinal;
         if( SUCCEEDED( DXUTGetAdapterOrdinalFromMonitor( hWindowMonitor, &newOrdinal ) ) )
@@ -5535,8 +5529,8 @@ HRESULT DXUTGetAdapterOrdinalFromMonitor( HMONITOR hMonitor, UINT* pAdapterOrdin
         for( int iAdapter=0; iAdapter<pAdapterList->GetSize(); iAdapter++ )
         {
             CD3D9EnumAdapterInfo* pAdapterInfo = pAdapterList->GetAt(iAdapter);
-            HMONITOR hAdapterMonitor = pD3D->GetAdapterMonitor( pAdapterInfo->AdapterOrdinal );
-            if( hAdapterMonitor == hMonitor )
+            HMONITOR hAdapterMonitor1 = pD3D->GetAdapterMonitor( pAdapterInfo->AdapterOrdinal );
+            if( hAdapterMonitor1 == hMonitor )
             {
                 *pAdapterOrdinal = pAdapterInfo->AdapterOrdinal;
                 return S_OK;

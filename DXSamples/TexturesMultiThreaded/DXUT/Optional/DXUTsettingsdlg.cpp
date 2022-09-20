@@ -40,6 +40,9 @@ CD3DSettingsDlg* WINAPI DXUTGetD3DSettingsDialog()
 CD3DSettingsDlg::CD3DSettingsDlg()
 {
     m_pStateBlock = NULL;
+    m_pStateBlock10 = NULL;
+    m_nRevertModeTimeout = 0;
+    m_nIDEvent = 0;
     m_bActive = false;
     m_pActiveDialog = NULL;
 }

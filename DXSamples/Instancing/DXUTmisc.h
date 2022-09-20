@@ -137,7 +137,6 @@ public:
 protected:
     LARGE_INTEGER GetAdjustedCurrentTime();
 
-    bool m_bUsingQPF;
     bool m_bTimerStopped;
     LONGLONG m_llQPFTicksPerSec;
 
@@ -178,7 +177,7 @@ D3DFORMAT WINAPI ConvertFormatDXGIToD3D9( DXGI_FORMAT fmt );
 //--------------------------------------------------------------------------------------
 void WINAPI DXUTOutputDebugStringW( LPCWSTR strMsg, ... );
 void WINAPI DXUTOutputDebugStringA( LPCSTR strMsg, ... );
-HRESULT WINAPI DXUTTrace( const CHAR* strFile, DWORD dwLine, HRESULT hr, const WCHAR* strMsg, bool bPopMsgBox );
+HRESULT WINAPI DXUTTrace( const WCHAR* strFile, DWORD dwLine, HRESULT hr, const WCHAR* strMsg, bool bPopMsgBox );
 void WINAPI DXUTTraceDecl( D3DVERTEXELEMENT9 decl[MAX_FVF_DECL_SIZE] );
 WCHAR* WINAPI DXUTTraceD3DDECLUSAGEtoString( BYTE u );
 WCHAR* WINAPI DXUTTraceD3DDECLMETHODtoString( BYTE m );
@@ -194,8 +193,8 @@ WCHAR* WINAPI DXUTTraceWindowsMessage( UINT uMsg );
 // These macros are very similar to dxerr's but it special cases the HRESULT defined
 // by DXUT to pop better message boxes. 
 #if defined(DEBUG) || defined(_DEBUG)
-#define DXUT_ERR(str,hr)           DXUTTrace( __FILE__, (DWORD)__LINE__, hr, str, false )
-#define DXUT_ERR_MSGBOX(str,hr)    DXUTTrace( __FILE__, (DWORD)__LINE__, hr, str, true )
+#define DXUT_ERR(str,hr)           DXUTTrace( __FILEW__, (DWORD)__LINE__, hr, str, false )
+#define DXUT_ERR_MSGBOX(str,hr)    DXUTTrace( __FILEW__, (DWORD)__LINE__, hr, str, true )
 #define DXUTTRACE                  DXUTOutputDebugString
 #else
 #define DXUT_ERR(str,hr)           (hr)

@@ -3042,6 +3042,7 @@ void CDXUTDialog::InitDefaultElements()
 CDXUTControl::CDXUTControl( CDXUTDialog *pDialog )
 {
     m_Type = DXUT_CONTROL_BUTTON;
+    m_nHotkey = 0;
     m_pDialog = pDialog;
     m_ID = 0;
     m_Index = 0;
@@ -3383,6 +3384,8 @@ CDXUTCheckBox::CDXUTCheckBox( CDXUTDialog *pDialog )
     m_pDialog = pDialog;
 
     m_bChecked = false;
+    ZeroMemory( &m_rcButton, sizeof(m_rcButton) );
+    ZeroMemory( &m_rcText, sizeof(m_rcText) );
 }
     
 
@@ -3549,6 +3552,7 @@ CDXUTRadioButton::CDXUTRadioButton( CDXUTDialog *pDialog )
 {
     m_Type = DXUT_CONTROL_RADIOBUTTON;
     m_pDialog = pDialog;
+    m_nButtonGroup = 0;
 }
 
 
@@ -3673,6 +3677,12 @@ CDXUTComboBox::CDXUTComboBox( CDXUTDialog *pDialog ) :
 
     m_nSBWidth = 16;
     m_bOpened = false;
+
+    ZeroMemory( &m_rcText, sizeof(m_rcText) );
+    ZeroMemory( &m_rcButton, sizeof(m_rcButton) );
+    ZeroMemory( &m_rcDropdown, sizeof(m_rcDropdown) );
+    ZeroMemory( &m_rcDropdownText, sizeof(m_rcDropdownText) );
+
     m_iSelected = -1;
     m_iFocused = -1;
 }
@@ -4169,7 +4179,7 @@ HRESULT CDXUTComboBox::AddItem( const WCHAR* strText, void* pData )
     }
     
     // Create a new item and set the data
-    DXUTComboBoxItem* pItem = new DXUTComboBoxItem;
+    DXUTComboBoxItem* pItem = new (std::nothrow) DXUTComboBoxItem;
     if( pItem == NULL )
     {
         return DXTRACE_ERR_MSGBOX( L"new", E_OUTOFMEMORY );
@@ -4364,7 +4374,12 @@ CDXUTSlider::CDXUTSlider( CDXUTDialog *pDialog )
     m_nMax = 100;
     m_nValue = 50;
 
+    m_nDragX = 0;
+    m_nDragOffset = 0;
+    m_nButtonX = 0;
+
     m_bPressed = false;
+    ZeroMemory( &m_rcButton, sizeof(m_rcButton) );
 }
 
 
@@ -4633,6 +4648,7 @@ CDXUTScrollBar::CDXUTScrollBar( CDXUTDialog *pDialog )
     m_nPageSize = 1;
     m_nStart = 0;
     m_nEnd = 1;
+    ZeroMemory( &m_LastMouse, sizeof(m_LastMouse) );
     m_Arrow = CLEAR;
     m_dArrowTS = 0.0;
 }
@@ -4991,6 +5007,8 @@ CDXUTListBox::CDXUTListBox( CDXUTDialog *pDialog ) :
     m_Type = DXUT_CONTROL_LISTBOX;
     m_pDialog = pDialog;
 
+    ZeroMemory( &m_rcText, sizeof(m_rcText) );
+    ZeroMemory( &m_rcSelection, sizeof(m_rcSelection) );
     m_dwStyle = 0;
     m_nSBWidth = 16;
     m_nSelected = -1;
@@ -5038,7 +5056,7 @@ void CDXUTListBox::UpdateRects()
 //--------------------------------------------------------------------------------------
 HRESULT CDXUTListBox::AddItem( const WCHAR *wszText, void *pData )
 {
-    DXUTListBoxItem *pNewItem = new DXUTListBoxItem;
+    DXUTListBoxItem *pNewItem = new (std::nothrow) DXUTListBoxItem;
     if( !pNewItem )
         return E_OUTOFMEMORY;
 
@@ -6423,7 +6441,7 @@ bool CUniBuffer::SetBufferSize( int nNewSize )
     if( nAllocateSize > DXUT_MAX_EDITBOXLENGTH )
         nAllocateSize = DXUT_MAX_EDITBOXLENGTH;
 
-    WCHAR *pTempBuffer = new WCHAR[nAllocateSize];
+    WCHAR *pTempBuffer = new (std::nothrow) WCHAR[nAllocateSize];
     if( !pTempBuffer )
         return false;
 
@@ -6795,9 +6813,9 @@ void DXUTBlendColor::Blend( UINT iState, float fElapsedTime, float fRate )
 
 
 //--------------------------------------------------------------------------------------
-void CDXUTElement::SetTexture( UINT iTexture, RECT* prcTexture, D3DCOLOR defaultTextureColor )
+void CDXUTElement::SetTexture( UINT iTexture1, RECT* prcTexture, D3DCOLOR defaultTextureColor )
 {
-    this->iTexture = iTexture;
+    this->iTexture = iTexture1;
     
     if( prcTexture )
         rcTexture = *prcTexture;
@@ -6809,10 +6827,10 @@ void CDXUTElement::SetTexture( UINT iTexture, RECT* prcTexture, D3DCOLOR default
     
 
 //--------------------------------------------------------------------------------------
-void CDXUTElement::SetFont( UINT iFont, D3DCOLOR defaultFontColor, DWORD dwTextFormat )
+void CDXUTElement::SetFont( UINT iFont1, D3DCOLOR defaultFontColor, DWORD dwTextFormat1 )
 {
-    this->iFont = iFont;
-    this->dwTextFormat = dwTextFormat;
+    this->iFont = iFont1;
+    this->dwTextFormat = dwTextFormat1;
 
     FontColor.Init( defaultFontColor );
 }

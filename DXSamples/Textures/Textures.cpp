@@ -73,7 +73,7 @@ struct CUSTOMVERTEX
 
 VOID Render();
 
-DWORD WINAPI RenderThreadProc(LPVOID pParam)
+DWORD WINAPI RenderThreadProc(LPVOID)
 {
     while(true)
     {
@@ -383,7 +383,7 @@ INT WINAPI wWinMain( HINSTANCE hInst, HINSTANCE, LPWSTR, INT )
 {
     // Register the window class
     WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, MsgProc, 0L, 0L,
-                      GetModuleHandle(NULL), NULL, NULL, NULL, NULL,
+                      hInst, NULL, NULL, NULL, NULL,
                       L"D3D Tutorial", NULL };
     RegisterClassEx( &wc );
 

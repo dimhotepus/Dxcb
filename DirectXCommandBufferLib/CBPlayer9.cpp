@@ -1,22 +1,13 @@
 // EMERGENT GAME TECHNOLOGIES PROPRIETARY INFORMATION
-//
-// This software is supplied under the terms of a license agreement or
-// nondisclosure agreement with Emergent Game Technologies and may not 
-// be copied or disclosed except in accordance with the terms of that 
-// agreement.
-//
-//      Copyright (c) 1996-2008 Emergent Game Technologies.
-//      All Rights Reserved.
-//
-// Emergent Game Technologies, Chapel Hill, North Carolina 27517
-// http://www.emergent.net
+// Open source.
+// See Vincent Scheib rant at http://beautifulpixels.blogspot.com/2008/07/parallel-rendering-with-directx-command.html
 
 #ifndef CBD3D_PREPROCESSING
 
-#include "stdio.h"
-#include "d3d9.h"
-#include "d3dx9effect.h"
-#include <assert.h>
+#include <cstdio>
+#include <cassert>
+#include <type_traits>
+#include <d3d9.h>
 #include "PREPROCESSED_CBPlayer9.cpp"
 
 #else
@@ -195,7 +186,7 @@ void CBPlayer9::Playback(IDirect3DDevice9 *pDevice, CBMemoryBuffer* pCB)
                 target = true;
                 char    temp[300];
                 DWORD *pNext = m_pCB->DoGetDWORDPTR();
-                sprintf_s(temp, 299, "%s  ( %d %d %d ) \n", CBMemoryBuffer::Index2FunctionName(dwFunc),pNext[0],pNext[2],pNext[3]);
+                sprintf_s(temp, 299, "%s  ( %lu %lu %lu ) \n", CBMemoryBuffer::Index2FunctionName(dwFunc),pNext[0],pNext[2],pNext[3]);
                 OutputDebugStringA(temp);
             }
 #if MEMTRACE
@@ -203,7 +194,7 @@ void CBPlayer9::Playback(IDirect3DDevice9 *pDevice, CBMemoryBuffer* pCB)
             {
                 char    temp[300];
 
-                sprintf_s(temp, 299, "%s  %d \n", CBMemoryBuffer::Index2FunctionName(dwFunc),dwFunc);
+                sprintf_s(temp, 299, "%s  %lu \n", CBMemoryBuffer::Index2FunctionName(dwFunc),dwFunc);
                 OutputDebugStringA(temp);
             }
 #endif

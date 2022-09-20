@@ -1,15 +1,5 @@
-// EMERGENT GAME TECHNOLOGIES PROPRIETARY INFORMATION
-//
-// This software is supplied under the terms of a license agreement or
-// nondisclosure agreement with Emergent Game Technologies and may not 
-// be copied or disclosed except in accordance with the terms of that 
-// agreement.
-//
-//      Copyright (c) 1996-2008 Emergent Game Technologies.
-//      All Rights Reserved.
-//
-// Emergent Game Technologies, Chapel Hill, North Carolina 27517
-// http://www.emergent.net
+// Open source.
+// See Vincent Scheib rant at http://beautifulpixels.blogspot.com/2008/07/parallel-rendering-with-directx-command.html
 
 #include "stdio.h"
 #include "d3d9.h" // required for CBMacros.h
@@ -23,21 +13,21 @@ bool g_bRecordAPITrace = false;
 #endif
 
 
-void SetMemoryTrace(bool bval)
+void SetMemoryTrace([[maybe_unused]] bool bval)
 {
 #if MEMTRACE
     g_bMemoryTrace = bval; 
 #endif
 }
 
-void SetCommandBufferPlaybackAPITrace(bool bval)
+void SetCommandBufferPlaybackAPITrace([[maybe_unused]] bool bval)
 { 
 #if MEMTRACE
     g_bPlaybackAPITrace = bval; 
 #endif
 }
 
-void SetCommandBufferRecordAPITrace(bool bval)
+void SetCommandBufferRecordAPITrace([[maybe_unused]] bool bval)
 { 
 #if MEMTRACE
     g_bRecordAPITrace = bval; 
@@ -169,9 +159,9 @@ char *CBMemoryBuffer::strFuncNames[120] = {
 
 
 CBMemoryBuffer::CBMemoryBuffer() : 
-m_pMem(NULL),
-m_iSize(0),
-m_pNext(NULL)
+    m_pMem(nullptr),
+    m_iSize(0),
+    m_pNext(nullptr)
 {
 }
 

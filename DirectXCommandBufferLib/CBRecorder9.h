@@ -1,15 +1,5 @@
-// EMERGENT GAME TECHNOLOGIES PROPRIETARY INFORMATION
-//
-// This software is supplied under the terms of a license agreement or
-// nondisclosure agreement with Emergent Game Technologies and may not 
-// be copied or disclosed except in accordance with the terms of that 
-// agreement.
-//
-//      Copyright (c) 1996-2008 Emergent Game Technologies.
-//      All Rights Reserved.
-//
-// Emergent Game Technologies, Chapel Hill, North Carolina 27517
-// http://www.emergent.net
+// Open source.
+// See Vincent Scheib rant at http://beautifulpixels.blogspot.com/2008/07/parallel-rendering-with-directx-command.html
 
 #pragma once
 
@@ -22,11 +12,10 @@
 
 #include "CBMacros.h"
 
-#pragma warning( disable : 4311 )
 class CBRecorder9 : public IDirect3DDevice9
 {
 public:
-    CBRecorder9(): m_pCB(NULL) {}
+    CBRecorder9(): m_pCB(nullptr) {}
 
     void SetCommandBuffer(CBMemoryBuffer* pCB) { m_pCB = pCB; }
 
@@ -36,7 +25,8 @@ public:
         DWORD* pMem;
         UINT iNumDWORDs;
         m_pCB->GetCBMemory(pMem,iNumDWORDs);
-        if(*pMem!=0x0)
+
+        if(*pMem != 0)
         {
             OutputDebugStringA("ERROR a memory buffer in use is being recorded!\n");
             return E_FAIL;
@@ -53,7 +43,8 @@ public:
             m_pCB->PutDWORD(CBD3D_COMMANDS::NULLCALL);
             return D3D_OK;
         }
-        return E_OUTOFMEMORY ;
+
+        return E_OUTOFMEMORY;
     }
 
     

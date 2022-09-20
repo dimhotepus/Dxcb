@@ -1,24 +1,15 @@
-// EMERGENT GAME TECHNOLOGIES PROPRIETARY INFORMATION
-//
-// This software is supplied under the terms of a license agreement or
-// nondisclosure agreement with Emergent Game Technologies and may not 
-// be copied or disclosed except in accordance with the terms of that 
-// agreement.
-//
-//      Copyright (c) 1996-2008 Emergent Game Technologies.
-//      All Rights Reserved.
-//
-// Emergent Game Technologies, Chapel Hill, North Carolina 27517
-// http://www.emergent.net
+// Open source.
+// See Vincent Scheib rant at http://beautifulpixels.blogspot.com/2008/07/parallel-rendering-with-directx-command.html
 
-#ifndef _CBMEMORYBUFFER_H_
-#define _CBMEMORYBUFFER_H_
+#ifndef DIRECTX_COMMAND_BUFFER_CBMEMORYBUFFER_H_
+#define DIRECTX_COMMAND_BUFFER_CBMEMORYBUFFER_H_
 
 #ifndef CBD3D_PREPROCESSING
-#   include "stdio.h"
-#   include <assert.h>
-#   include "d3d9.h"
-#   include "PREPROCESSED_CBMemoryBuffer.h"
+#include <cassert>
+#include <cstdio>
+#include <d3d9.h>
+
+#include "PREPROCESSED_CBMemoryBuffer.h"
 #else
 
 #include "CBMacros.h"
@@ -34,12 +25,13 @@ void SetCommandBufferPlaybackAPITrace(bool bval);
 void SetCommandBufferRecordAPITrace(bool bval);
 
 // This enumeration is used to index into the PlaybackNumberArgs table to obtain the
-// number of
+// number of.
 namespace CBD3D_COMMANDS
 {
     enum
     {
-        NULLCALL = 0xD3D00000, // High value to catch command buffer errors
+        // High value to catch command buffer errors.
+        NULLCALL = 0xD3D00000,
         QueryInterface,
         AddRef,
         Release,
@@ -160,68 +152,120 @@ namespace CBD3D_COMMANDS
         GetSoftwareVertexProcessing,
         GetNPatchMode
     };
-}
-
-//disable type conversion errors
-#pragma warning( disable : 4312 )
-#pragma warning( disable : 4311 )
+}  // namespace CBD3D_COMMANDS
 
 class CBMemoryBuffer
 {
 public:
-
     CBMemoryBuffer();
+
     void ResetNext();
     void GetCBMemory(DWORD* &pMem, UINT &iNumDWORDs);
-    void SetCBMemory(DWORD *pMem,UINT iNumDWORDs);
+    void SetCBMemory(DWORD *pMem, UINT iNumDWORDs);
 
-    //put or get DWORD sized tokens
-    inline DWORD DoGetDWORD();
-    inline DWORD* DoGetDWORDPTR(); //peek at the next token
-
-    //memsize is size in bytes
-    inline DWORD* DoGetMem(DWORD memsize);
-
-    static char *strFuncNames[120];
-    static char* Index2FunctionName(unsigned int index) { return CBMemoryBuffer::strFuncNames[ index-CBD3D_COMMANDS::NULLCALL ]; }
-    template< class TYPE >
-    void DoPutDWORD(TYPE val)
+    DWORD* CBMemoryBuffer::DoGetDWORDPTR() const
     {
-        assert(sizeof(TYPE) <= sizeof(DWORD));
-        assert(m_pNext >= m_pMem);
-        assert(m_pNext < (m_pMem+m_iSize));
-#if MEMTRACE
-        DWORD *pNext = m_pNext;
-#endif
-        *m_pNext = (DWORD) val;
-        m_pNext++;
-        DEBUGPUT( "CBMemoryBuffer::DoPutDWORD", val , pNext, m_pNext );
+        return m_pNext;
     }
 
-    template< class TYPE >
-    void DoPutMem(TYPE *val,DWORD memsize)
+    DWORD DoGetDWORD()
     {
-        int memsize_in_DWORDs = (memsize+3)/4; // Number of DWORDs required to store memsize, round up
         assert(m_pNext >= m_pMem);
-        assert((m_pNext+memsize_in_DWORDs-1) < (m_pMem+m_iSize));
+        assert(m_pNext < m_pMem + m_iSize);
+
 #if MEMTRACE
-        DWORD *pNext = m_pNext;
+        DWORD* pNext{ m_pNext };
 #endif
-        if(val==NULL)
-            *m_pNext = 0;
-        else
-            *m_pNext = 1;
+
+        const DWORD ret{ *m_pNext };
+
         m_pNext++;
-        if(val!=NULL)
+
+        DEBUGGET("CBMemoryBuffer::DoGetDWORD", ret, pNext, m_pNext)
+
+        return ret;
+    }
+
+    template<typename T>
+    inline T* DoGetMem(DWORD memsize)
+    {
+        // Number of DWORDs required to store memsize, round up.
+        const DWORD memsize_in_DWORDs{ (memsize + 3) / 4 };
+
+        assert(sizeof(T) <= memsize);
+        assert(m_pNext >= m_pMem);
+        assert(m_pNext + memsize_in_DWORDs - 1 < m_pMem + m_iSize);
+
+#if MEMTRACE
+        DWORD* pNext{ m_pNext };
+#endif
+
+        const DWORD val{ *m_pNext };
+
+        m_pNext++;
+
+        alignas(T*) DWORD* ret { m_pNext };
+
+        if (val != 0)
         {
-            memcpy((void*)m_pNext,(const void*)val,memsize);
             m_pNext += memsize_in_DWORDs;
         }
-        DEBUGPUT( "CBMemoryBuffer::DoPutDWORD", val , pNext, m_pNext );
+        else
+        {
+            ret = nullptr;
+        }
+
+        DEBUGGET("CBMemoryBuffer::DoGetMem", ret, pNext, m_pNext)
+
+            return reinterpret_cast<T*>(ret);
     }
 
+    template<typename TYPE>
+    void DoPutDWORD(TYPE val)
+    {
+        static_assert(sizeof(TYPE) <= sizeof(DWORD));
 
-    //types of size > DWORD
+        assert(m_pNext >= m_pMem);
+        assert(m_pNext <  m_pMem + m_iSize);
+
+#if MEMTRACE
+        DWORD *pNext{m_pNext};
+#endif
+
+        alignas(TYPE) DWORD dword = static_cast<DWORD>(val);
+        memcpy(m_pNext, &dword, sizeof(dword));
+
+        ++m_pNext;
+
+        DEBUGPUT( "CBMemoryBuffer::DoPutDWORD", val, pNext, m_pNext )
+    }
+
+    template<typename TYPE>
+    void DoPutMem(TYPE *val, DWORD memsize)
+    {
+        const DWORD memsize_in_DWORDs{(memsize + 3) / 4}; // Number of DWORDs required to store memsize, round up
+
+        assert(m_pNext >= m_pMem);
+        assert(m_pNext + memsize_in_DWORDs - 1 < m_pMem + m_iSize);
+
+#if MEMTRACE
+        DWORD *pNext{m_pNext};
+#endif
+
+        *m_pNext = val != nullptr ? 1 : 0;
+        m_pNext++;
+
+        if (val != nullptr)
+        {
+            memcpy(m_pNext, val, memsize);
+
+            m_pNext += memsize_in_DWORDs;
+        }
+
+        DEBUGPUT( "CBMemoryBuffer::DoPutDWORD", val, pNext, m_pNext )
+    }
+
+    // Types of size > DWORD.
     GET_AND_PUT_OBJ( D3DCAPS9 );
     GET_AND_PUT_OBJ( D3DDEVICE_CREATION_PARAMETERS );
     GET_AND_PUT_OBJ( D3DPRESENT_PARAMETERS );
@@ -249,9 +293,6 @@ public:
     GET_AND_PUT_OBJ( CONST D3DRECTPATCH_INFO );
     GET_AND_PUT_OBJ( CONST D3DTRIPATCH_INFO  );
 
-
-
-
     GET_AND_PUT_DWORD( D3DDISPLAYMODE* );
     GET_AND_PUT_DWORD( BOOL* );
     GET_AND_PUT_DWORD( CONST float* );
@@ -262,7 +303,7 @@ public:
     GET_AND_PUT_DWORD( CONST int* );
     GET_AND_PUT_DWORD( LPUINT );
 
-    //types that can be cast as DWORDs
+    // Types that can be cast as DWORDs.
     GET_AND_PUT_DWORD( void** );
     GET_AND_PUT_DWORD( D3DPRIMITIVETYPE );
     GET_AND_PUT_DWORD( UINT );
@@ -303,73 +344,33 @@ public:
     GET_AND_PUT_DWORD( IDirect3DQuery9** );
     GET_AND_PUT_DWORD( IDirect3D9** );
 
-
-
-    //Get the unread or unwritten meory size
-    int GetAvailableMemorySize()
+    // Get the unread or unwritten memory size.
+    unsigned GetAvailableMemorySize() const
     {
-        int ret = (m_iSize - (m_pNext - m_pMem));
-        return ret ;
-    }
-    //check if there is iSize DWORDs left
-    bool CheckAvailableMemorySize(int iSize)
-    {
-        int AvailableMemory = GetAvailableMemorySize();
-        MEMSIZECHECK(AvailableMemory,iSize);
-        return (iSize<=AvailableMemory);
+        const unsigned ret = m_iSize - static_cast<unsigned>(m_pNext - m_pMem);
+        return ret;
     }
 
-    // pointer to memory given to us by app
+    // Check if there is size DWORDs left.
+    bool CheckAvailableMemorySize(unsigned size) const
+    {
+        const unsigned availableMemory{GetAvailableMemorySize()};
+
+        MEMSIZECHECK(availableMemory, size)
+
+        return size <= availableMemory;
+    }
+
+    // Pointer to memory given to us by app.
     DWORD    *m_pMem;
-    // size of memory in DWORDs.
-    UINT    m_iSize;
-    // pointer to current token position in memory
+    // Size of memory in DWORDs.
+    UINT     m_iSize;
+    // Pointer to current token position in memory.
     DWORD    *m_pNext;
-}; // class CBMemoryBuffer
 
-//---------------------------------------------------------------------------
-// Inline Functions
-
-inline DWORD* CBMemoryBuffer::DoGetDWORDPTR()
-{
-    return m_pNext;
-}
-
-inline DWORD CBMemoryBuffer::DoGetDWORD()
-{
-    assert(m_pNext >= m_pMem);
-    assert(m_pNext < (m_pMem+m_iSize));
-#if MEMTRACE
-    DWORD *pNext = m_pNext;
-#endif
-    DWORD ret = *m_pNext;
-    m_pNext++;
-    DEBUGGET( "CBMemoryBuffer::DoGetDWORD", ret, pNext, m_pNext );
-    return ret;
-}
-
-inline DWORD* CBMemoryBuffer::DoGetMem( DWORD memsize )
-{
-    int memsize_in_DWORDs = (memsize+3)/4; // Number of DWORDs required to store memsize, round up
-    assert(m_pNext >= m_pMem);
-    assert((m_pNext+memsize_in_DWORDs-1) < (m_pMem+m_iSize));
-#if MEMTRACE
-    DWORD *pNext = m_pNext;
-#endif
-    DWORD val = *m_pNext;
-    m_pNext++;
-    DWORD* ret = m_pNext;
-    if(val != 0)
-    {
-        m_pNext += memsize_in_DWORDs;
-    }
-    else
-    {
-        ret = NULL;
-    }
-    DEBUGGET( "CBMemoryBuffer::DoGetMem", ret, pNext,  m_pNext );
-    return ret;
-}
+    static char* strFuncNames[120];
+    static char* Index2FunctionName(unsigned int index) { return CBMemoryBuffer::strFuncNames[index - CBD3D_COMMANDS::NULLCALL]; }
+};
 
 #endif // CBD3D_PREPROCESSING
-#endif // _CBMEMORYBUFFER_H_
+#endif // DIRECTX_COMMAND_BUFFER_CBMEMORYBUFFER_H_

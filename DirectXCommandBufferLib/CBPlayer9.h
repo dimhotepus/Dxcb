@@ -1,18 +1,8 @@
-// EMERGENT GAME TECHNOLOGIES PROPRIETARY INFORMATION
-//
-// This software is supplied under the terms of a license agreement or
-// nondisclosure agreement with Emergent Game Technologies and may not 
-// be copied or disclosed except in accordance with the terms of that 
-// agreement.
-//
-//      Copyright (c) 1996-2008 Emergent Game Technologies.
-//      All Rights Reserved.
-//
-// Emergent Game Technologies, Chapel Hill, North Carolina 27517
-// http://www.emergent.net
+// Open source.
+// See Vincent Scheib rant at http://beautifulpixels.blogspot.com/2008/07/parallel-rendering-with-directx-command.html
 
-#ifndef _CBPLAYBACK_H_
-#define _CBPLAYBACK_H_
+#ifndef DIRECTX_COMMAND_BUFFER_CBPLAYER_H_
+#define DIRECTX_COMMAND_BUFFER_CBPLAYER_H_
 
 #ifndef CBD3D_PREPROCESSING
 #include "CBMemoryBuffer.h"
@@ -161,22 +151,22 @@ public:
 
     STDMETHOD_(UINT, GetAvailableTextureMem)(THIS) CBD3D_UINT_NOTIMPLIMENTED;
     STDMETHOD_(UINT, GetNumberOfSwapChains)(THIS) CBD3D_UINT_NOTIMPLIMENTED;
-    STDMETHOD_(BOOL, ShowCursor)( BOOL bShow) CBD3D_BOOL_NOTIMPLIMENTED;
+    STDMETHOD_(BOOL, ShowCursor)( [[maybe_unused]] BOOL bShow) CBD3D_BOOL_NOTIMPLIMENTED;
     STDMETHOD_(BOOL, GetSoftwareVertexProcessing)(THIS) CBD3D_BOOL_NOTIMPLIMENTED;
     STDMETHOD_(float, GetNPatchMode)(THIS) CBD3D_FLOAT_NOTIMPLIMENTED;
-    STDMETHOD( GetVertexShaderConstantF) (UINT  StartRegister, float*  pConstantData, UINT  Vector4fCount ) CBD3D_D3DERR_NOTIMPLIMENTED;
-    STDMETHOD( GetVertexShaderConstantI) (UINT  StartRegister, int*  pConstantData, UINT  Vector4iCount  ) CBD3D_D3DERR_NOTIMPLIMENTED;
-    STDMETHOD( GetVertexShaderConstantB) (UINT  StartRegister, BOOL*  pConstantData, UINT  BoolCount  ) CBD3D_D3DERR_NOTIMPLIMENTED;
-    STDMETHOD( GetPixelShaderConstantF) (UINT  StartRegister, float*  pConstantData, UINT  Vector4fCount ) CBD3D_D3DERR_NOTIMPLIMENTED;
-    STDMETHOD( GetPixelShaderConstantI) (UINT  StartRegister, int*  pConstantData, UINT  Vector4iCount ) CBD3D_D3DERR_NOTIMPLIMENTED;
-    STDMETHOD( GetPixelShaderConstantB) (UINT  StartRegister, BOOL*  pConstantData, UINT  BoolCount ) CBD3D_D3DERR_NOTIMPLIMENTED;
+    STDMETHOD( GetVertexShaderConstantF) ([[maybe_unused]] UINT  StartRegister, [[maybe_unused]] float*  pConstantData, [[maybe_unused]] UINT  Vector4fCount ) CBD3D_D3DERR_NOTIMPLIMENTED;
+    STDMETHOD( GetVertexShaderConstantI) ([[maybe_unused]] UINT  StartRegister, [[maybe_unused]] int*  pConstantData, [[maybe_unused]] UINT  Vector4iCount  ) CBD3D_D3DERR_NOTIMPLIMENTED;
+    STDMETHOD( GetVertexShaderConstantB) ([[maybe_unused]] UINT  StartRegister, [[maybe_unused]] BOOL*  pConstantData, [[maybe_unused]] UINT  BoolCount  ) CBD3D_D3DERR_NOTIMPLIMENTED;
+    STDMETHOD( GetPixelShaderConstantF) ([[maybe_unused]] UINT  StartRegister, [[maybe_unused]] float*  pConstantData, [[maybe_unused]] UINT  Vector4fCount ) CBD3D_D3DERR_NOTIMPLIMENTED;
+    STDMETHOD( GetPixelShaderConstantI) ([[maybe_unused]] UINT  StartRegister, [[maybe_unused]] int*  pConstantData, [[maybe_unused]] UINT  Vector4iCount ) CBD3D_D3DERR_NOTIMPLIMENTED;
+    STDMETHOD( GetPixelShaderConstantB) ([[maybe_unused]] UINT  StartRegister, [[maybe_unused]] BOOL*  pConstantData, [[maybe_unused]] UINT  BoolCount ) CBD3D_D3DERR_NOTIMPLIMENTED;
 
 
     CBMemoryBuffer* m_pCB;
     IDirect3DDevice9* m_pDevice;
 };
 
-typedef void (CBPlayer9::*PlayBFuncPTR) ();
+using PlayBFuncPTR = void (CBPlayer9::*)();
  
 #endif // CBD3D_PREPROCESSING
-#endif
+#endif // DIRECTX_COMMAND_BUFFER_CBPLAYER_H_

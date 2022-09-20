@@ -3749,8 +3749,8 @@ void DXUTBuildValidD3D10DeviceSettings( DXUTD3D10DeviceSettings* pValidDeviceSet
                         continue; // Skip display modes that don't match
 
                     // Find the delta between the current refresh rate and the optimal refresh rate
-                    float fCurRanking = abs(float(displayMode.RefreshRate.Numerator)/displayMode.RefreshRate.Denominator -
-                                            float(refreshRateMatch.Numerator)/refreshRateMatch.Denominator);
+                    float fCurRanking = fabsf(float(displayMode.RefreshRate.Numerator)/displayMode.RefreshRate.Denominator -
+                                              float(refreshRateMatch.Numerator)/refreshRateMatch.Denominator);
 
                     if( fCurRanking < fBestRefreshRanking )
                     {
