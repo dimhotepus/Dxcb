@@ -996,7 +996,7 @@ int CDXUTDialogResourceManager::AddFont( LPCWSTR strFaceName, LONG height, LONG 
     }
 
     // Add a new font and try to create it
-    DXUTFontNode* pNewFontNode = new DXUTFontNode;
+    DXUTFontNode* pNewFontNode = new (std::nothrow) DXUTFontNode;
     if( pNewFontNode == NULL )
         return -1;
 
@@ -1067,7 +1067,7 @@ int CDXUTDialogResourceManager::AddTexture( LPCWSTR strFilename )
     }
 
     // Add a new texture and try to create it
-    DXUTTextureNode* pNewTextureNode = new DXUTTextureNode;
+    DXUTTextureNode* pNewTextureNode = new (std::nothrow) DXUTTextureNode;
     if( pNewTextureNode == NULL )
         return -1;
 
@@ -1115,7 +1115,7 @@ int CDXUTDialogResourceManager::AddTexture( LPCWSTR strResourceName, HMODULE hRe
     }
 
     // Add a new texture and try to create it
-    DXUTTextureNode* pNewTextureNode = new DXUTTextureNode;
+    DXUTTextureNode* pNewTextureNode = new (std::nothrow) DXUTTextureNode;
     if( pNewTextureNode == NULL )
         return -1;
 
@@ -1542,7 +1542,7 @@ HRESULT CDXUTDialog::SetDefaultElement( UINT nControlType, UINT iElement, CDXUTE
 
     // Otherwise, add a new entry
     DXUTElementHolder* pNewHolder;
-    pNewHolder = new DXUTElementHolder;
+    pNewHolder = new (std::nothrow) DXUTElementHolder;
     if( pNewHolder == NULL )
         return E_OUTOFMEMORY;
 
@@ -1583,7 +1583,7 @@ HRESULT CDXUTDialog::AddStatic( int ID, LPCWSTR strText, int x, int y, int width
 {
     HRESULT hr = S_OK;
 
-    CDXUTStatic* pStatic = new CDXUTStatic( this );
+    CDXUTStatic* pStatic = new (std::nothrow) CDXUTStatic( this );
 
     if( ppCreated != NULL )
         *ppCreated = pStatic;
@@ -1611,7 +1611,7 @@ HRESULT CDXUTDialog::AddButton( int ID, LPCWSTR strText, int x, int y, int width
 {
     HRESULT hr = S_OK;
 
-    CDXUTButton* pButton = new CDXUTButton( this );
+    CDXUTButton* pButton = new (std::nothrow) CDXUTButton( this );
 
     if( ppCreated != NULL )
         *ppCreated = pButton;
@@ -1640,7 +1640,7 @@ HRESULT CDXUTDialog::AddCheckBox( int ID, LPCWSTR strText, int x, int y, int wid
 {
     HRESULT hr = S_OK;
 
-    CDXUTCheckBox* pCheckBox = new CDXUTCheckBox( this );
+    CDXUTCheckBox* pCheckBox = new (std::nothrow) CDXUTCheckBox( this );
 
     if( ppCreated != NULL )
         *ppCreated = pCheckBox;
@@ -1671,7 +1671,7 @@ HRESULT CDXUTDialog::AddRadioButton( int ID, UINT nButtonGroup, LPCWSTR strText,
 {
     HRESULT hr = S_OK;
 
-    CDXUTRadioButton* pRadioButton = new CDXUTRadioButton( this );
+    CDXUTRadioButton* pRadioButton = new (std::nothrow) CDXUTRadioButton( this );
 
     if( ppCreated != NULL )
         *ppCreated = pRadioButton;
@@ -1705,7 +1705,7 @@ HRESULT CDXUTDialog::AddComboBox( int ID, int x, int y, int width, int height, U
 {
     HRESULT hr = S_OK;
 
-    CDXUTComboBox* pComboBox = new CDXUTComboBox( this );
+    CDXUTComboBox* pComboBox = new (std::nothrow) CDXUTComboBox( this );
 
     if( ppCreated != NULL )
         *ppCreated = pComboBox;
@@ -1734,7 +1734,7 @@ HRESULT CDXUTDialog::AddSlider( int ID, int x, int y, int width, int height, int
 {
     HRESULT hr = S_OK;
 
-    CDXUTSlider* pSlider = new CDXUTSlider( this );
+    CDXUTSlider* pSlider = new (std::nothrow) CDXUTSlider(this);
 
     if( ppCreated != NULL )
         *ppCreated = pSlider;
@@ -1765,7 +1765,7 @@ HRESULT CDXUTDialog::AddEditBox( int ID, LPCWSTR strText, int x, int y, int widt
 {
     HRESULT hr = S_OK;
 
-    CDXUTEditBox *pEditBox = new CDXUTEditBox( this );
+    CDXUTEditBox *pEditBox = new (std::nothrow) CDXUTEditBox( this );
 
     if( ppCreated != NULL )
         *ppCreated = pEditBox;
@@ -1794,7 +1794,7 @@ HRESULT CDXUTDialog::AddEditBox( int ID, LPCWSTR strText, int x, int y, int widt
 HRESULT CDXUTDialog::AddListBox( int ID, int x, int y, int width, int height, DWORD dwStyle, CDXUTListBox** ppCreated )
 {
     HRESULT hr = S_OK;
-    CDXUTListBox *pListBox = new CDXUTListBox( this );
+    CDXUTListBox *pListBox = new (std::nothrow) CDXUTListBox( this );
 
     if( ppCreated != NULL )
         *ppCreated = pListBox;
@@ -2108,7 +2108,7 @@ HRESULT CDXUTDialog::DrawRect10( RECT* pRect, D3DCOLOR color )
 //--------------------------------------------------------------------------------------
 HRESULT CDXUTDialog::DrawPolyLine( POINT* apPoints, UINT nNumPoints, D3DCOLOR color )
 {
-    DXUT_SCREEN_VERTEX* vertices = new DXUT_SCREEN_VERTEX[ nNumPoints ];
+    DXUT_SCREEN_VERTEX* vertices = new (std::nothrow) DXUT_SCREEN_VERTEX[ nNumPoints ];
     if( vertices == NULL )
         return E_OUTOFMEMORY;
 
@@ -2391,8 +2391,7 @@ void CDXUTDialog::SetNextDialog( CDXUTDialog* pNextDialog )
         pNextDialog = this;
     
     m_pNextDialog = pNextDialog;
-    if( pNextDialog )
-        m_pNextDialog->m_pPrevDialog = this;
+    m_pNextDialog->m_pPrevDialog = this;
 }
 
 
@@ -3054,8 +3053,6 @@ CDXUTControl::CDXUTControl( CDXUTDialog *pDialog )
     m_bHasFocus = false;
     m_bIsDefault = false;
 
-    m_pDialog = NULL;
-
     m_x = 0;
     m_y = 0;
     m_width = 0;
@@ -3096,7 +3093,7 @@ HRESULT CDXUTControl::SetElement( UINT iElement, CDXUTElement* pElement )
     // Make certain the array is this large
     for( UINT i=m_Elements.GetSize(); i <= iElement; i++ )
     {
-        CDXUTElement* pNewElement = new CDXUTElement();
+        CDXUTElement* pNewElement = new (std::nothrow) CDXUTElement();
         if( pNewElement == NULL )
             return E_OUTOFMEMORY;
 
@@ -5082,7 +5079,7 @@ HRESULT CDXUTListBox::AddItem( const WCHAR *wszText, void *pData )
 //--------------------------------------------------------------------------------------
 HRESULT CDXUTListBox::InsertItem( int nIndex, const WCHAR *wszText, void *pData )
 {
-    DXUTListBoxItem *pNewItem = new DXUTListBoxItem;
+    DXUTListBoxItem *pNewItem = new (std::nothrow) DXUTListBoxItem;
     if( !pNewItem )
         return E_OUTOFMEMORY;
 
@@ -5722,26 +5719,28 @@ void CDXUTEditBox::PlaceCaret( int nCP )
         m_nFirstVisible = nCP;
     }
     else
-    // If the right of the character is bigger than the offset of the control's
-    // right edge, we need to scroll right to this character.
-    if( nX2 > nX1st + RectWidth( m_rcText ) )
     {
-        // Compute the X of the new left-most pixel
-        int nXNewLeft = nX2 - RectWidth( m_rcText );
+        // If the right of the character is bigger than the offset of the control's
+        // right edge, we need to scroll right to this character.
+        if (nX2 > nX1st + RectWidth(m_rcText))
+        {
+            // Compute the X of the new left-most pixel
+            int nXNewLeft = nX2 - RectWidth(m_rcText);
 
-        // Compute the char position of this character
-        int nCPNew1st, nNewTrail;
-        m_Buffer.XtoCP( nXNewLeft, &nCPNew1st, &nNewTrail );
+            // Compute the char position of this character
+            int nCPNew1st, nNewTrail;
+            m_Buffer.XtoCP(nXNewLeft, &nCPNew1st, &nNewTrail);
 
-        // If this coordinate is not on a character border,
-        // start from the next character so that the caret
-        // position does not fall outside the text rectangle.
-        int nXNew1st;
-        m_Buffer.CPtoX( nCPNew1st, FALSE, &nXNew1st );
-        if( nXNew1st < nXNewLeft )
-            ++nCPNew1st;
+            // If this coordinate is not on a character border,
+            // start from the next character so that the caret
+            // position does not fall outside the text rectangle.
+            int nXNew1st;
+            m_Buffer.CPtoX(nCPNew1st, FALSE, &nXNew1st);
+            if (nXNew1st < nXNewLeft)
+                ++nCPNew1st;
 
-        m_nFirstVisible = nCPNew1st;
+            m_nFirstVisible = nCPNew1st;
+        }
     }
 }
 
@@ -6378,8 +6377,14 @@ void CDXUTEditBox::SetTextFloatArray( const float *pNumbers, int nCount )
     }
 
     // Don't want the last space
-    if( nCount > 0 && wcslen(wszBuffer) > 0 )
-        wszBuffer[wcslen(wszBuffer)-1] = 0;
+    if (nCount > 0)
+    {
+        size_t nBufferLength = wcslen( wszBuffer );
+        if (nBufferLength > 0)
+        {
+            wszBuffer[nBufferLength - 1] = L'\0';
+        }
+    }
 
     SetText( wszBuffer );
 }
@@ -6588,10 +6593,11 @@ bool CUniBuffer::InsertChar( int nIndex, WCHAR wChar )
 //--------------------------------------------------------------------------------------
 bool CUniBuffer::RemoveChar( int nIndex )
 {
-    if( !lstrlenW( m_pwszBuffer ) || nIndex < 0 || nIndex >= lstrlenW( m_pwszBuffer ) )
+    const int nBufferLen = lstrlenW(m_pwszBuffer);
+    if( !nBufferLen || nIndex < 0 || nIndex >= nBufferLen )
         return false;  // Invalid index
 
-    MoveMemory( m_pwszBuffer + nIndex, m_pwszBuffer + nIndex + 1, sizeof(WCHAR) * ( lstrlenW( m_pwszBuffer ) - nIndex ) );
+    MoveMemory( m_pwszBuffer + nIndex, m_pwszBuffer + nIndex + 1, sizeof(WCHAR) * ( nBufferLen - nIndex ) );
     m_bAnalyseRequired = true;
     return true;
 }

@@ -186,7 +186,7 @@ HRESULT WINAPI DXUTCreateD3D9Enumeration()
 {
     if( g_pDXUTD3D9Enumeration == NULL )
     {
-        g_pDXUTD3D9Enumeration = new CD3D9Enumeration();
+        g_pDXUTD3D9Enumeration = new (std::nothrow) CD3D9Enumeration();
         if( NULL == g_pDXUTD3D9Enumeration ) 
             return E_OUTOFMEMORY;
     }
@@ -302,7 +302,7 @@ HRESULT CD3D9Enumeration::Enumerate( LPDXUTCALLBACKISD3D9DEVICEACCEPTABLE IsD3D9
     UINT numAdapters = pD3D->GetAdapterCount();
     for (UINT adapterOrdinal = 0; adapterOrdinal < numAdapters; adapterOrdinal++)
     {
-        CD3D9EnumAdapterInfo* pAdapterInfo = new CD3D9EnumAdapterInfo;
+        CD3D9EnumAdapterInfo* pAdapterInfo = new (std::nothrow) CD3D9EnumAdapterInfo;
         if( pAdapterInfo == NULL )
             return E_OUTOFMEMORY;
 
@@ -406,7 +406,7 @@ HRESULT CD3D9Enumeration::Enumerate( LPDXUTCALLBACKISD3D9DEVICEACCEPTABLE IsD3D9
         if( !bUniqueDesc )
         {
             WCHAR sz[100];
-            StringCchPrintf( sz, 100, L" (#%d)", pAdapterInfo->AdapterOrdinal );
+            StringCchPrintf( sz, 100, L" (#%u)", pAdapterInfo->AdapterOrdinal );
             StringCchCat( pAdapterInfo->szUniqueDescription, 256, sz );
 
         }
@@ -435,7 +435,7 @@ HRESULT CD3D9Enumeration::EnumerateDevices( CD3D9EnumAdapterInfo* pAdapterInfo, 
     // Enumerate each Direct3D device type
     for( UINT iDeviceType = 0; iDeviceType < devTypeArrayCount; iDeviceType++ )
     {
-        CD3D9EnumDeviceInfo* pDeviceInfo = new CD3D9EnumDeviceInfo;
+        CD3D9EnumDeviceInfo* pDeviceInfo = new (std::nothrow) CD3D9EnumDeviceInfo;
         if( pDeviceInfo == NULL )
             return E_OUTOFMEMORY;
 
@@ -557,7 +557,7 @@ HRESULT CD3D9Enumeration::EnumerateDeviceCombos( CD3D9EnumAdapterInfo* pAdapterI
                 // DeviceCombo that is supported by the system and acceptable to the app. We still 
                 // need to find one or more suitable depth/stencil buffer format,
                 // multisample type, and present interval.
-                CD3D9EnumDeviceSettingsCombo* pDeviceCombo = new CD3D9EnumDeviceSettingsCombo;
+                CD3D9EnumDeviceSettingsCombo* pDeviceCombo = new (std::nothrow) CD3D9EnumDeviceSettingsCombo;
                 if( pDeviceCombo == NULL )
                     return E_OUTOFMEMORY;
 
@@ -2261,7 +2261,7 @@ HRESULT WINAPI DXUTCreateD3D10Enumeration()
 {
     if( g_pDXUTD3D10Enumeration == NULL )
     {
-        g_pDXUTD3D10Enumeration = new CD3D10Enumeration();
+        g_pDXUTD3D10Enumeration = new (std::nothrow) CD3D10Enumeration();
         if( NULL == g_pDXUTD3D10Enumeration ) 
             return E_OUTOFMEMORY;
     }
@@ -2311,6 +2311,7 @@ CD3D10Enumeration::CD3D10Enumeration()
     m_nMinHeight = 480;
     m_nMaxWidth = UINT_MAX;
     m_nMaxHeight = UINT_MAX;
+    m_nMultisampleQualityMax = 0xFFFF;
     m_bEnumerateAllAdapterFormats = false;
 
     m_nRefreshMin = 0;
@@ -2361,13 +2362,12 @@ HRESULT CD3D10Enumeration::Enumerate( LPDXUTCALLBACKISD3D10DEVICEACCEPTABLE IsD3
         if( FAILED(hr) ) // DXGIERR_NOT_FOUND is expected when the end of the list is hit
             break;
 
-        CD3D10EnumAdapterInfo *pAdapterInfo = new CD3D10EnumAdapterInfo;
+        CD3D10EnumAdapterInfo *pAdapterInfo = new (std::nothrow) CD3D10EnumAdapterInfo;
         if( !pAdapterInfo )
         {
             SAFE_RELEASE( pAdapter );
             return E_OUTOFMEMORY;
         }
-        ZeroMemory( pAdapterInfo, sizeof(CD3D10EnumAdapterInfo) );
         pAdapterInfo->AdapterOrdinal = index;
         pAdapter->GetDesc( &pAdapterInfo->AdapterDesc );
         pAdapterInfo->m_pAdapter = pAdapter;
@@ -2436,7 +2436,7 @@ HRESULT CD3D10Enumeration::Enumerate( LPDXUTCALLBACKISD3D10DEVICEACCEPTABLE IsD3
         if( !bUniqueDesc )
         {
             WCHAR sz[100];
-            StringCchPrintf( sz, 100, L" (#%d)", pAdapterInfo->AdapterOrdinal );
+            StringCchPrintf( sz, 100, L" (#%u)", pAdapterInfo->AdapterOrdinal );
             StringCchCat( pAdapterInfo->szUniqueDescription, DXGI_MAX_DEVICE_IDENTIFIER_STRING, sz );
         }
     }
@@ -2465,13 +2465,12 @@ HRESULT CD3D10Enumeration::EnumerateOutputs( CD3D10EnumAdapterInfo* pAdapterInfo
         }
         else //Success!
         {
-            CD3D10EnumOutputInfo *pOutputInfo = new CD3D10EnumOutputInfo;
+            CD3D10EnumOutputInfo *pOutputInfo = new (std::nothrow) CD3D10EnumOutputInfo;
             if( !pOutputInfo )
             {
                 SAFE_RELEASE( pOutput );
                 return E_OUTOFMEMORY;
             }
-            ZeroMemory( pOutputInfo, sizeof(CD3D10EnumOutputInfo) );
             pOutput->GetDesc( &pOutputInfo->Desc );
             pOutputInfo->Output = iOutput;
             pOutputInfo->m_pOutput = pOutput;
@@ -2526,7 +2525,7 @@ HRESULT CD3D10Enumeration::EnumerateDisplayModes( CD3D10EnumOutputInfo *pOutputI
         //			  This is to avoid calling GetDisplayModeList more times than necessary.
         //			  GetDisplayModeList is an expensive call.
         UINT NumModes = 512;
-        DXGI_MODE_DESC *pDesc = new DXGI_MODE_DESC[ NumModes ];
+        DXGI_MODE_DESC *pDesc = new (std::nothrow) DXGI_MODE_DESC[ NumModes ];
         assert( pDesc );
         if( !pDesc )
             return E_OUTOFMEMORY;
@@ -2577,7 +2576,7 @@ HRESULT CD3D10Enumeration::EnumerateDisplayModes( CD3D10EnumOutputInfo *pOutputI
                 break;
             }
 
-            pDesc = new DXGI_MODE_DESC[ NumModes ];
+            pDesc = new (std::nothrow) DXGI_MODE_DESC[ NumModes ];
             assert( pDesc );
             if( !pDesc )
                 return E_OUTOFMEMORY;
@@ -2634,7 +2633,7 @@ HRESULT CD3D10Enumeration::EnumerateDevices( CD3D10EnumAdapterInfo *pAdapterInfo
     // Enumerate each Direct3D device type
     for( UINT iDeviceType = 0; iDeviceType < devTypeArrayCount; iDeviceType++ )
     {
-        CD3D10EnumDeviceInfo* pDeviceInfo = new CD3D10EnumDeviceInfo;
+        CD3D10EnumDeviceInfo* pDeviceInfo = new (std::nothrow) CD3D10EnumDeviceInfo;
         if( pDeviceInfo == NULL )
             return E_OUTOFMEMORY;
 
@@ -2737,7 +2736,7 @@ HRESULT CD3D10Enumeration::EnumerateDeviceCombos( IDXGIFactory *pFactory, CD3D10
                     // DeviceCombo that is supported by the system. We still 
                     // need to find one or more suitable depth/stencil buffer format,
                     // multisample type, and present interval.
-                    CD3D10EnumDeviceSettingsCombo* pDeviceCombo = new CD3D10EnumDeviceSettingsCombo;
+                    CD3D10EnumDeviceSettingsCombo* pDeviceCombo = new (std::nothrow) CD3D10EnumDeviceSettingsCombo;
                     if( pDeviceCombo == NULL )
                         return E_OUTOFMEMORY;
 
@@ -3404,7 +3403,7 @@ float DXUTRankD3D10DeviceCombo( CD3D10EnumDeviceSettingsCombo* pDeviceSettingsCo
     if( pDeviceSettingsCombo->DeviceType == pOptimalDeviceSettings->DriverType )
         fCurRanking += fDeviceTypeWeight;
     // Slightly prefer HAL 
-    if( pDeviceSettingsCombo->DeviceType == D3DDEVTYPE_HAL )
+    if( pDeviceSettingsCombo->DeviceType == D3D10_DRIVER_TYPE_HARDWARE )
         fCurRanking += 0.1f; 
 
     //---------------------

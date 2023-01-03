@@ -926,7 +926,7 @@ CD3D9EnumDeviceSettingsCombo* CD3DSettingsDlg::GetCurrentDeviceSettingsCombo()
                                              g_DeviceSettings.d3d9.DeviceType,
                                              g_DeviceSettings.d3d9.AdapterFormat,
                                              g_DeviceSettings.d3d9.pp.BackBufferFormat,
-                                             (g_DeviceSettings.d3d9.pp.Windowed == TRUE) );
+                                             (g_DeviceSettings.d3d9.pp.Windowed != FALSE) );
 }
 
 
@@ -938,7 +938,7 @@ CD3D10EnumDeviceSettingsCombo* CD3DSettingsDlg::GetCurrentD3D10DeviceSettingsCom
                                              g_DeviceSettings.d3d10.DriverType,
                                              g_DeviceSettings.d3d10.Output,
                                              g_DeviceSettings.d3d10.sd.BufferDesc.Format,
-                                             (g_DeviceSettings.d3d10.sd.Windowed == TRUE) );
+                                             (g_DeviceSettings.d3d10.sd.Windowed != FALSE) );
 }
 
 
@@ -1382,7 +1382,7 @@ HRESULT CD3DSettingsDlg::OnAdapterOutputChanged()
     for( int idc = 0; idc < pAdapterInfo->deviceSettingsComboList.GetSize(); idc++ )
     {
         CD3D10EnumDeviceSettingsCombo* pDeviceCombo = pAdapterInfo->deviceSettingsComboList.GetAt( idc );
-        if( ( pDeviceCombo->Windowed == TRUE ) == bWindowed )
+        if( ( pDeviceCombo->Windowed != FALSE ) == bWindowed )
         {
             AddD3D10BackBufferFormat( pDeviceCombo->BackBufferFormat );
         }
@@ -1454,7 +1454,7 @@ HRESULT CD3DSettingsDlg::OnAdapterFormatChanged()
                 {
                     // If "Show All" is not checked, then hide all resolutions
                     // that don't match the aspect ratio of the desktop resolution
-                    if( bShowAll || (!bShowAll && fabsf(fDesktopAspectRatio - fAspect) < 0.05f) )
+                    if( bShowAll || fabsf(fDesktopAspectRatio - fAspect) < 0.05f )
                     {
                         AddResolution( DisplayMode.Width, DisplayMode.Height );    
                     }
@@ -1658,13 +1658,13 @@ HRESULT CD3DSettingsDlg::OnBackBufferFormatChanged()
             {
                 CD3D9EnumDeviceSettingsCombo* pDeviceCombo = pDeviceInfo->deviceSettingsComboList.GetAt( idc );
 
-                if( pDeviceCombo->Windowed == (g_DeviceSettings.d3d9.pp.Windowed == TRUE) &&
+                if( pDeviceCombo->Windowed == (g_DeviceSettings.d3d9.pp.Windowed != FALSE) &&
                     pDeviceCombo->AdapterFormat == adapterFormat &&
                     pDeviceCombo->BackBufferFormat == backBufferFormat )
                 {
                     CDXUTComboBox* pDepthStencilComboBox = m_Dialog.GetComboBox( DXUTSETTINGSDLG_DEPTH_STENCIL );
                     pDepthStencilComboBox->RemoveAllItems();
-                    pDepthStencilComboBox->SetEnabled( (g_DeviceSettings.d3d9.pp.EnableAutoDepthStencil == TRUE) ); 
+                    pDepthStencilComboBox->SetEnabled( (g_DeviceSettings.d3d9.pp.EnableAutoDepthStencil != FALSE) ); 
 
                     if( g_DeviceSettings.d3d9.pp.EnableAutoDepthStencil )
                     {
@@ -1746,7 +1746,7 @@ HRESULT CD3DSettingsDlg::OnBackBufferFormatChanged()
             {
                 CD3D10EnumDeviceSettingsCombo* pDeviceCombo = pAdapterInfo->deviceSettingsComboList.GetAt( idc );
 
-                if( pDeviceCombo->Windowed == (g_DeviceSettings.d3d10.sd.Windowed == TRUE) &&
+                if( pDeviceCombo->Windowed == (g_DeviceSettings.d3d10.sd.Windowed != FALSE) &&
                     pDeviceCombo->BackBufferFormat == backBufferFormat &&
                     pDeviceCombo->DeviceType == g_DeviceSettings.d3d10.DriverType )
                 {
@@ -2127,7 +2127,7 @@ void CD3DSettingsDlg::AddResolution( DWORD dwWidth, DWORD dwHeight )
     DWORD dwResolutionData;
     WCHAR strResolution[50];
     dwResolutionData = MAKELONG( dwWidth, dwHeight );
-    StringCchPrintf( strResolution, 50, L"%d by %d", dwWidth, dwHeight );
+    StringCchPrintf( strResolution, 50, L"%lu by %lu", dwWidth, dwHeight );
 
     if( !pComboBox->ContainsItem( strResolution ) )
         pComboBox->AddItem( strResolution, ULongToPtr( dwResolutionData ) );
@@ -2154,7 +2154,7 @@ void CD3DSettingsDlg::AddD3D10Resolution( DWORD dwWidth, DWORD dwHeight )
     DWORD dwResolutionData;
     WCHAR strResolution[50];
     dwResolutionData = MAKELONG( dwWidth, dwHeight );
-    StringCchPrintf( strResolution, 50, L"%d by %d", dwWidth, dwHeight );
+    StringCchPrintf( strResolution, 50, L"%lu by %lu", dwWidth, dwHeight );
 
     if( !pComboBox->ContainsItem( strResolution ) )
         pComboBox->AddItem( strResolution, ULongToPtr( dwResolutionData ) );
@@ -2183,7 +2183,7 @@ void CD3DSettingsDlg::AddRefreshRate( DWORD dwRate )
     if( dwRate == 0 )
         StringCchCopy( strRefreshRate, 50, L"Default Rate" );
     else
-        StringCchPrintf( strRefreshRate, 50, L"%d Hz", dwRate );
+        StringCchPrintf( strRefreshRate, 50, L"%lu Hz", dwRate );
 
     if( !pComboBox->ContainsItem( strRefreshRate ) )
         pComboBox->AddItem( strRefreshRate, ULongToPtr(dwRate) );
@@ -2209,11 +2209,11 @@ void CD3DSettingsDlg::AddD3D10RefreshRate( DXGI_RATIONAL RefreshRate )
     if( RefreshRate.Numerator == 0 && RefreshRate.Denominator == 0 )
         StringCchCopy( strRefreshRate, 50, L"Default Rate" );
     else
-        StringCchPrintf( strRefreshRate, 50, L"%d Hz", RefreshRate.Numerator / RefreshRate.Denominator );
+        StringCchPrintf( strRefreshRate, 50, L"%u Hz", RefreshRate.Numerator / RefreshRate.Denominator );
 
     if( !pComboBox->ContainsItem( strRefreshRate ) )
     {
-        DXGI_RATIONAL *pNewRate = new DXGI_RATIONAL;
+        DXGI_RATIONAL *pNewRate = new (std::nothrow) DXGI_RATIONAL;
         if( pNewRate )
         {
             *pNewRate = RefreshRate;
@@ -2320,7 +2320,7 @@ void CD3DSettingsDlg::AddMultisampleQuality( DWORD dwQuality )
     CDXUTComboBox* pComboBox = m_Dialog.GetComboBox( DXUTSETTINGSDLG_MULTISAMPLE_QUALITY );
         
     WCHAR strQuality[50];
-    StringCchPrintf( strQuality, 50, L"%d", dwQuality );
+    StringCchPrintf( strQuality, 50, L"%u", dwQuality );
 
     if( !pComboBox->ContainsItem( strQuality ) )
         pComboBox->AddItem( strQuality, ULongToPtr(dwQuality) );
@@ -2364,7 +2364,7 @@ void CD3DSettingsDlg::AddD3D10MultisampleQuality( UINT Quality )
     CDXUTComboBox* pComboBox = m_Dialog.GetComboBox( DXUTSETTINGSDLG_D3D10_MULTISAMPLE_QUALITY );
 
     WCHAR strQuality[50];
-    StringCchPrintf( strQuality, 50, L"%d", Quality );
+    StringCchPrintf( strQuality, 50, L"%u", Quality );
 
     if( !pComboBox->ContainsItem( strQuality ) )
         pComboBox->AddItem( strQuality, ULongToPtr(Quality) );
@@ -2511,7 +2511,7 @@ HRESULT CD3DSettingsDlg::UpdateD3D10Resolutions()
         {
             // If "Show All" is not checked, then hide all resolutions
             // that don't match the aspect ratio of the desktop resolution
-            if( bShowAll || (!bShowAll && fabsf(fDesktopAspectRatio - fAspect) < 0.05f) )
+            if( bShowAll || fabsf(fDesktopAspectRatio - fAspect) < 0.05f )
             {
                 AddD3D10Resolution( DisplayMode.Width, DisplayMode.Height );
             }

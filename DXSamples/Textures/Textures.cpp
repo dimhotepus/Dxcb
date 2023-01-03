@@ -34,6 +34,8 @@
 #include "CBRecorder9.h"
 #include "CBPlayer9.h"
 
+using namespace dxcb;
+
 //-----------------------------------------------------------------------------
 // Global variables
 //-----------------------------------------------------------------------------
@@ -47,7 +49,7 @@ CBPlayer9               g_CBPlayer;
 CBRecorder9*            g_pCBRecorder = &g_CBRecorder;
 CBPlayer9*              g_pCBPlayer = &g_CBPlayer;
 const int               g_CommandBufferSize = 100000;
-DWORD                   g_CBMem[g_CommandBufferSize];
+size_t                  g_CBMem[g_CommandBufferSize];
 CBMemoryBuffer          g_CB;
 HANDLE                  g_RenderRecordSem = NULL;
 HANDLE                  g_RenderPlaybackSem = NULL;
@@ -113,7 +115,7 @@ void InitThreads()
     CreateThread(NULL, 0, RenderThreadProc, NULL, 0, NULL);
 
     // Setup command buffer recording and playback memory
-    g_CB.SetCBMemory(g_CBMem, g_CommandBufferSize);
+    g_CB.SetMemory(g_CBMem, g_CommandBufferSize);
     g_pCBRecorder->SetCommandBuffer(&g_CB);
 }
 

@@ -1,5 +1,6 @@
 DirectX Command Buffer Lib
 Version 1.0, 7/21/2008
+Version 2.0, 5/6/2023
 
 See license.txt for copyright and license information.
 ________________________________________________________________________________
@@ -26,14 +27,14 @@ http://emergent.net/GameFest2008
 ________________________________________________________________________________
 2. CONTENTS OF PACKAGE
 
-\AllDirectXCommandBuffer_2005.sln - Microsoft Visual Studio 2005 solution
+\DirectXCommandBufferLib.sln      - Microsoft Visual Studio 2005 solution
                                     containing library and sample projects
 
 \license.txt                      - License information
 
 \readme.txt                       - This file
 
-\DirectXCommandBufferLib          - Code for Library
+\dxcb                             - Code for Library
 
 \DXSamples                        - Samples
 
@@ -59,9 +60,6 @@ Build process:
     Debugging through code provided by macros is difficult, and so files using 
     macros are first preprocessed and then run through a code beautifier. This 
     is done by using custom build steps on selected files in the project.
-    
-    The code beautifier is GC.exe, or "Great Code", from the sourceforge project: 
-    http://sourceforge.net/projects/gcgreatcode/
 
 Key classes:
 
@@ -147,3 +145,7 @@ ________________________________________________________________________________
 1.0 - Initial release
 
     - First version of library. Developed for and used in Gamefest presentation.
+
+2.0 - Second release
+
+    - Port to C++11 and x64 support.

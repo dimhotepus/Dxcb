@@ -304,7 +304,7 @@ HRESULT CDXUTSDKMesh::CreateFromFile( ID3D10Device *pDev10, IDirect3DDevice9* pD
     UINT cBytes = FileSize.LowPart;
 
     // Allocate memory
-    m_pStaticMeshData = new BYTE[ cBytes ];
+    m_pStaticMeshData = new (std::nothrow) BYTE[ cBytes ];
     if( !m_pStaticMeshData )
     {
         CloseHandle( m_hFile );
@@ -355,7 +355,7 @@ HRESULT CDXUTSDKMesh::CreateFromMemory( ID3D10Device *pDev10,
         SDKMESH_HEADER* pHeader = (SDKMESH_HEADER*)pData;
 
         SIZE_T StaticSize = (SIZE_T)(pHeader->HeaderSize + pHeader->NonBufferDataSize);
-        m_pHeapData = new BYTE[ StaticSize ];
+        m_pHeapData = new (std::nothrow) BYTE[ StaticSize ];
         if( !m_pHeapData )
             return hr;
 
@@ -439,12 +439,12 @@ HRESULT CDXUTSDKMesh::CreateFromMemory( ID3D10Device *pDev10,
         LoadMaterials( pDev9, m_pMaterialArray, m_pMeshHeader->NumMaterials, pLoaderCallbacks9 );
 
     // Create a place to store our bind pose frame matrices
-    m_pBindPoseFrameMatrices = new D3DXMATRIX[ m_pMeshHeader->NumFrames ];
+    m_pBindPoseFrameMatrices = new (std::nothrow) D3DXMATRIX[ m_pMeshHeader->NumFrames ];
     if( !m_pBindPoseFrameMatrices )
         goto Error;
 
     // Create a place to store our transformed frame matrices
-    m_pTransformedFrameMatrices = new D3DXMATRIX[ m_pMeshHeader->NumFrames ];
+    m_pTransformedFrameMatrices = new (std::nothrow) D3DXMATRIX[ m_pMeshHeader->NumFrames ];
     if( !m_pTransformedFrameMatrices )
         goto Error;
 
@@ -918,7 +918,7 @@ HRESULT CDXUTSDKMesh::LoadAnimation( WCHAR* szFileName )
         goto Error;
 
     //allocate
-    m_pAnimationData = new BYTE[ (size_t)(sizeof(SDKANIMATION_FILE_HEADER) + fileheader.AnimationDataSize) ];
+    m_pAnimationData = new (std::nothrow) BYTE[ (size_t)(sizeof(SDKANIMATION_FILE_HEADER) + fileheader.AnimationDataSize) ];
     if( !m_pAnimationData )
     {
         hr = E_OUTOFMEMORY;
@@ -1096,7 +1096,7 @@ HRESULT CDXUTSDKMesh::CreateAdjacencyIndices( ID3D10Device *pd3dDevice, float fE
     UINT IBIndex = 0;
     UINT VBIndex = 0;
 
-    m_pAdjacencyIndexBufferArray = new SDKMESH_INDEX_BUFFER_HEADER[ m_pMeshHeader->NumIndexBuffers ];
+    m_pAdjacencyIndexBufferArray = new (std::nothrow) SDKMESH_INDEX_BUFFER_HEADER[ m_pMeshHeader->NumIndexBuffers ];
     if( !m_pAdjacencyIndexBufferArray )
         return E_OUTOFMEMORY;
 
@@ -1798,7 +1798,7 @@ HRESULT CDXUTXFileMesh::Create( LPDIRECT3DDEVICE9 pd3dDevice, ID3DXMesh* pInMesh
 
     // Optimize the mesh for performance
     DWORD *rgdwAdjacency = NULL;
-    rgdwAdjacency = new DWORD[pInMesh->GetNumFaces() * 3];
+    rgdwAdjacency = new (std::nothrow) DWORD[pInMesh->GetNumFaces() * 3];
     if( rgdwAdjacency == NULL )
         return E_OUTOFMEMORY;
     pInMesh->GenerateAdjacency(1e-6f,rgdwAdjacency);
@@ -1847,13 +1847,13 @@ HRESULT CDXUTXFileMesh::CreateMaterials( LPCWSTR strPath, IDirect3DDevice9 *pd3d
     if( d3dxMtrls && m_dwNumMaterials > 0 )
     {
         // Allocate memory for the materials and textures
-        m_pMaterials = new D3DMATERIAL9[m_dwNumMaterials];
+        m_pMaterials = new (std::nothrow) D3DMATERIAL9[m_dwNumMaterials];
         if( m_pMaterials == NULL )
             return E_OUTOFMEMORY;
-        m_pTextures = new LPDIRECT3DBASETEXTURE9[m_dwNumMaterials];
+        m_pTextures = new (std::nothrow) LPDIRECT3DBASETEXTURE9[m_dwNumMaterials];
         if( m_pTextures == NULL )
             return E_OUTOFMEMORY;
-        m_strMaterials = new CHAR[m_dwNumMaterials][MAX_PATH];
+        m_strMaterials = new (std::nothrow) CHAR[m_dwNumMaterials][MAX_PATH];
         if( m_strMaterials == NULL )
             return E_OUTOFMEMORY;
 

@@ -179,13 +179,13 @@ public:
 protected:
     struct LINE_NODE
     {
+        D3DXVECTOR2* pVertexList;
+        DWORD    dwVertexListCount;
         int      nLineID;
         D3DCOLOR Color;
         float    fWidth;
         bool     bAntiAlias;
         float    fScaleRatio;
-        D3DXVECTOR2* pVertexList;
-        DWORD    dwVertexListCount;
     };
 
     CGrowableArray<LINE_NODE*> m_LinesList;
@@ -235,7 +235,7 @@ private:
         if( m_MemorySize > iElements )
             return true;
 
-        T* pTemp = new T[ (size_t)(iElements*2 + 256) ];
+        T* pTemp = new (std::nothrow) T[ (size_t)(iElements*2 + 256) ];
         if( !pTemp )
             return false;
 
@@ -244,14 +244,14 @@ private:
             CopyMemory( pTemp, m_pData, (size_t)(m_NumElements*sizeof(T)) );
         }
     
-        if( m_pData ) delete []m_pData;
+        delete []m_pData;
         m_pData = pTemp;
         return true;
     }
 
 public:
     CDXUTStack() { m_pData = NULL; m_NumElements = 0; m_MemorySize = 0; }
-    ~CDXUTStack() { if( m_pData ) delete []m_pData; }
+    ~CDXUTStack() { delete []m_pData; }
 
     UINT GetCount() { return m_NumElements; }
     T GetAt( UINT i ) { return m_pData[i]; }

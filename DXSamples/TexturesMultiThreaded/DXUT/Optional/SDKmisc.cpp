@@ -105,7 +105,7 @@ INT_PTR CALLBACK DisplaySwitchToREFWarningProc(HWND hDlg, UINT message, WPARAM w
             // Easier to set text here than in the DLGITEMTEMPLATE
             SetWindowText( hDlg, DXUTGetWindowTitle() );
             SendMessage( GetDlgItem(hDlg, 0x100), STM_SETIMAGE, IMAGE_ICON, (LPARAM)LoadIcon(0, IDI_QUESTION));
-            WCHAR sz[512]; StringCchPrintf( sz, 512, L"This program needs to use the Direct3D %d reference device.  This device implements the entire Direct3D %d feature set, but runs very slowly.  Do you wish to continue?", lParam, lParam );
+            WCHAR sz[512]; StringCchPrintf( sz, 512, L"This program needs to use the Direct3D %zu reference device.  This device implements the entire Direct3D %zi feature set, but runs very slowly.  Do you wish to continue?", lParam, lParam );
             SetDlgItemText( hDlg, 0x101, sz ); 
             SetDlgItemText( hDlg, IDYES, L"&Yes" );
             SetDlgItemText( hDlg, IDNO, L"&No" );
@@ -1249,7 +1249,7 @@ HRESULT CDXUTLineManager::AddLine( int* pnLineID, D3DXVECTOR2* pVertexList, DWOR
     if( pVertexList == NULL || dwVertexListCount == 0 )
         return E_INVALIDARG;
 
-    LINE_NODE* pLineNode = new LINE_NODE;
+    LINE_NODE* pLineNode = new (std::nothrow) LINE_NODE;
     if( pLineNode == NULL )
         return E_OUTOFMEMORY;
     ZeroMemory( pLineNode, sizeof(LINE_NODE) );
@@ -1263,7 +1263,7 @@ HRESULT CDXUTLineManager::AddLine( int* pnLineID, D3DXVECTOR2* pVertexList, DWOR
     if( pnLineID )
         *pnLineID = pLineNode->nLineID;
 
-    pLineNode->pVertexList = new D3DXVECTOR2[dwVertexListCount];
+    pLineNode->pVertexList = new (std::nothrow) D3DXVECTOR2[dwVertexListCount];
     if( pLineNode->pVertexList == NULL )
     {
         delete pLineNode;

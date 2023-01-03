@@ -726,8 +726,8 @@ HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_
     HRESULT hr;
 //Used in file local test.
 #if 0
-            pD3DDev9->pCurrentDevice = pd3dDevice;
-            pD3DDev9->pRealDevice = pd3dDevice;
+            pD3DDev9->current_d3d9_device_ = pd3dDevice;
+            pD3DDev9->real_d3d9_device_ = pd3dDevice;
             pd3dDevice = (IDirect3DDevice9*) pD3DDev9;
 #endif
     V_RETURN( g_DialogResourceManager.OnD3D9CreateDevice( pd3dDevice ) );
@@ -812,8 +812,8 @@ HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
     HRESULT hr;
 //used in file local test
 #if 0
-            pD3DDev9->pCurrentDevice = pd3dDevice;
-            pD3DDev9->pRealDevice = pd3dDevice;
+            pD3DDev9->current_d3d9_device_ = pd3dDevice;
+            pD3DDev9->real_d3d9_device_ = pd3dDevice;
             pd3dDevice = (IDirect3DDevice9*) pD3DDev9;
 #endif
     V_RETURN( g_DialogResourceManager.OnD3D9ResetDevice() );
@@ -902,8 +902,8 @@ void OnRenderHWInstancing( IDirect3DDevice9* pd3dDevice, double fTime, float fEl
 {
 //used for local render call test
 #if 0
-            pD3DDev9->pCurrentDevice = pd3dDevice;
-            pD3DDev9->pRealDevice = pd3dDevice;
+            pD3DDev9->current_d3d9_device_ = pd3dDevice;
+            pD3DDev9->real_d3d9_device_ = pd3dDevice;
             pd3dDevice = (IDirect3DDevice9*) pD3DDev9;
 #endif
     HRESULT hr;
@@ -918,7 +918,7 @@ void OnRenderHWInstancing( IDirect3DDevice9* pd3dDevice, double fTime, float fEl
     //pD3DDev9->ReplaceCurrentDevice(g_pRecorder);;
     pd3dDevice = (IDirect3DDevice9*) g_pRecorder;
 
-    g_pMBuffer->SetCBMemory(CBMemory,g_dwCBMemorySize);
+    g_pMBuffer->SetMemory(CBMemory,g_dwCBMemorySize);
     g_pRecorder->SetCommandBuffer(g_pMBuffer);
     g_pRecorder->BeginCommandBuffer();
 
@@ -1048,8 +1048,8 @@ void OnRenderShaderInstancing( IDirect3DDevice9* pd3dDevice, double fTime, float
     HRESULT hr;
     UINT iPass, cPasses;
 #if 0
-            pD3DDev9->pCurrentDevice = pd3dDevice;
-            pD3DDev9->pRealDevice = pd3dDevice;
+            pD3DDev9->current_d3d9_device_ = pd3dDevice;
+            pD3DDev9->real_d3d9_device_ = pd3dDevice;
             pd3dDevice = (IDirect3DDevice9*) pD3DDev9;
 #endif
     V( pd3dDevice->SetVertexDeclaration( g_pVertexDeclShader ));
@@ -1107,8 +1107,8 @@ void OnRenderConstantsInstancing( IDirect3DDevice9* pd3dDevice, double fTime, fl
     HRESULT hr;
     UINT iPass, cPasses;
 #if 0
-            pD3DDev9->pCurrentDevice = pd3dDevice;
-            pD3DDev9->pRealDevice = pd3dDevice;
+            pD3DDev9->current_d3d9_device_ = pd3dDevice;
+            pD3DDev9->real_d3d9_device_ = pd3dDevice;
             pd3dDevice = (IDirect3DDevice9*) pD3DDev9;
 #endif
     V( pd3dDevice->SetVertexDeclaration( g_pVertexDeclConstants ));
@@ -1158,8 +1158,8 @@ void OnRenderStreamInstancing( IDirect3DDevice9* pd3dDevice, double fTime, float
     HRESULT hr;
     UINT iPass, cPasses;
 #if 0
-            pD3DDev9->pCurrentDevice = pd3dDevice;
-            pD3DDev9->pRealDevice = pd3dDevice;
+            pD3DDev9->current_d3d9_device_ = pd3dDevice;
+            pD3DDev9->real_d3d9_device_ = pd3dDevice;
             pd3dDevice = (IDirect3DDevice9*) pD3DDev9;
 #endif
     V( pd3dDevice->SetVertexDeclaration( g_pVertexDeclHardware ));
@@ -1209,8 +1209,8 @@ void OnRenderStreamInstancing( IDirect3DDevice9* pd3dDevice, double fTime, float
 void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float fElapsedTime, void* pUserContext )
 {
 #if 0
-            pD3DDev9->pCurrentDevice = pd3dDevice;
-            pD3DDev9->pRealDevice = pd3dDevice;
+            pD3DDev9->current_d3d9_device_ = pd3dDevice;
+            pD3DDev9->real_d3d9_device_ = pd3dDevice;
             pd3dDevice = (IDirect3DDevice9*) pD3DDev9;
 #endif
     // If the settings dialog is being shown, then

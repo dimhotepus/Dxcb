@@ -1162,7 +1162,7 @@ HRESULT CDXUTDirectionWidget::StaticOnD3D9CreateDevice( IDirect3DDevice9* pd3dDe
     // so when rendering the mesh's triangle list the vertices will 
     // cache hit more often so it won't have to re-execute the vertex shader 
     // on those vertices so it will improve perf.
-    DWORD* rgdwAdjacency = new DWORD[s_pD3D9Mesh->GetNumFaces() * 3];
+    DWORD* rgdwAdjacency = new (std::nothrow) DWORD[s_pD3D9Mesh->GetNumFaces() * 3];
     if( rgdwAdjacency == NULL )
         return E_OUTOFMEMORY;
     V( s_pD3D9Mesh->GenerateAdjacency(1e-6f,rgdwAdjacency) );

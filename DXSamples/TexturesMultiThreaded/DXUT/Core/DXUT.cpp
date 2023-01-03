@@ -556,7 +556,7 @@ HRESULT WINAPI DXUTCreateState()
 {
     if( g_pDXUTState == NULL )
     {
-        g_pDXUTState = new DXUTState;
+        g_pDXUTState = new (std::nothrow) DXUTState;
         if( NULL == g_pDXUTState ) 
             return E_OUTOFMEMORY;
     }
@@ -647,7 +647,7 @@ bool DXUTIsD3D9( DXUTDeviceSettings* pDeviceSettings )                          
 bool DXUTIsCurrentDeviceD3D9()                                                  { DXUTDeviceSettings* pDeviceSettings = GetDXUTState().GetCurrentDeviceSettings();  return DXUTIsD3D9(pDeviceSettings); };
 UINT DXUTGetBackBufferWidthFromDS( DXUTDeviceSettings* pNewDeviceSettings )     { return DXUTIsD3D9(pNewDeviceSettings) ? pNewDeviceSettings->d3d9.pp.BackBufferWidth : pNewDeviceSettings->d3d10.sd.BufferDesc.Width; }
 UINT DXUTGetBackBufferHeightFromDS( DXUTDeviceSettings* pNewDeviceSettings )    { return DXUTIsD3D9(pNewDeviceSettings) ? pNewDeviceSettings->d3d9.pp.BackBufferHeight : pNewDeviceSettings->d3d10.sd.BufferDesc.Height; }
-bool DXUTGetIsWindowedFromDS( DXUTDeviceSettings* pNewDeviceSettings )          { if (!pNewDeviceSettings) return true; return ((DXUTIsD3D9(pNewDeviceSettings) ? pNewDeviceSettings->d3d9.pp.Windowed : pNewDeviceSettings->d3d10.sd.Windowed) == 1); }
+bool DXUTGetIsWindowedFromDS( DXUTDeviceSettings* pNewDeviceSettings )          { if (!pNewDeviceSettings) return true; return ((DXUTIsD3D9(pNewDeviceSettings) ? pNewDeviceSettings->d3d9.pp.Windowed : pNewDeviceSettings->d3d10.sd.Windowed) != FALSE); }
 
 
 //--------------------------------------------------------------------------------------
@@ -2081,7 +2081,7 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
         return DXUTERR_NODIRECT3D;
 
     // Make a copy of the pNewDeviceSettings on the heap
-    DXUTDeviceSettings* pNewDeviceSettingsOnHeap = new DXUTDeviceSettings;
+    DXUTDeviceSettings* pNewDeviceSettingsOnHeap = new (std::nothrow) DXUTDeviceSettings;
     if( pNewDeviceSettingsOnHeap == NULL )
         return E_OUTOFMEMORY;
     memcpy( pNewDeviceSettingsOnHeap, pNewDeviceSettings, sizeof(DXUTDeviceSettings) );
@@ -3320,14 +3320,11 @@ void DXUTCleanup3DEnvironment9( bool bReleaseSettings )
 
         // Release the D3D device and in debug configs, displays a message box if there 
         // are unrelease objects.
-        if( pd3dDevice )
+        UINT references = pd3dDevice->Release();
+        if( references > 0 )
         {
-            UINT references = pd3dDevice->Release();
-            if( references > 0 )
-            {
-                DXUTDisplayErrorMessage( DXUTERR_NONZEROREFCOUNT );
-                DXUT_ERR( L"DXUTCleanup3DEnvironment", DXUTERR_NONZEROREFCOUNT );
-            }
+            DXUTDisplayErrorMessage( DXUTERR_NONZEROREFCOUNT );
+            DXUT_ERR( L"DXUTCleanup3DEnvironment", DXUTERR_NONZEROREFCOUNT );
         }
         GetDXUTState().SetD3D9Device( NULL );
 
@@ -3795,7 +3792,7 @@ HRESULT DXUTCreate3DEnvironment10( ID3D10Device* pd3d10DeviceFromApp )
                 break;
             SAFE_RELEASE( pOutput );
         }
-        IDXGIOutput** ppOutputArray = new IDXGIOutput*[OutputCount];
+        IDXGIOutput** ppOutputArray = new (std::nothrow) IDXGIOutput*[OutputCount];
         if( !ppOutputArray )
             return E_OUTOFMEMORY;
         for( iOutput = 0; iOutput < OutputCount; ++iOutput )
@@ -4232,14 +4229,11 @@ void DXUTCleanup3DEnvironment10( bool bReleaseSettings )
 
         // Release the D3D device and in debug configs, displays a message box if there 
         // are unrelease objects.
-        if( pd3dDevice )
+        UINT references = pd3dDevice->Release();
+        if( references > 0 )
         {
-            UINT references = pd3dDevice->Release();
-            if( references > 0 )
-            {
-                DXUTDisplayErrorMessage( DXUTERR_NONZEROREFCOUNT );
-                DXUT_ERR( L"DXUTCleanup3DEnvironment", DXUTERR_NONZEROREFCOUNT );
-            }
+            DXUTDisplayErrorMessage( DXUTERR_NONZEROREFCOUNT );
+            DXUT_ERR( L"DXUTCleanup3DEnvironment", DXUTERR_NONZEROREFCOUNT );
         }
         GetDXUTState().SetD3D10Device( NULL );
 
@@ -4891,7 +4885,7 @@ HRESULT WINAPI DXUTSetTimer( LPDXUTCALLBACKTIMER pCallbackTimer, float fTimeoutI
     CGrowableArray<DXUT_TIMER>* pTimerList = GetDXUTState().GetTimerList();
     if( pTimerList == NULL )
     {
-        pTimerList = new CGrowableArray<DXUT_TIMER>;
+        pTimerList = new (std::nothrow) CGrowableArray<DXUT_TIMER>;
         if( pTimerList == NULL )
             return E_OUTOFMEMORY; 
         GetDXUTState().SetTimerList( pTimerList );
@@ -5805,7 +5799,7 @@ void DXUTUpdateStaticFrameStats()
         }
 
         WCHAR* pstrStaticFrameStats = GetDXUTState().GetStaticFrameStats();
-        StringCchPrintf( pstrStaticFrameStats, 256, L"D3D9 %%sVsync %s (%dx%d), %s%s%s",
+        StringCchPrintf( pstrStaticFrameStats, 256, L"D3D9 %%sVsync %s (%ux%u), %s%s%s",
                          ( pPP->PresentationInterval == D3DPRESENT_INTERVAL_IMMEDIATE ) ? L"off" : L"on", 
                          pPP->BackBufferWidth, pPP->BackBufferHeight,
                          strFmt, strDepthFmt, strMultiSample );
@@ -5829,7 +5823,7 @@ void DXUTUpdateStaticFrameStats()
         StringCchPrintf( strMultiSample, 100, L" (MS%u, Q%u)", pDeviceSettings->d3d10.sd.SampleDesc.Count, pDeviceSettings->d3d10.sd.SampleDesc.Quality );
 
         WCHAR* pstrStaticFrameStats = GetDXUTState().GetStaticFrameStats();
-        StringCchPrintf( pstrStaticFrameStats, 256, L"D3D10 %%sVsync %s (%dx%d), %s%s",
+        StringCchPrintf( pstrStaticFrameStats, 256, L"D3D10 %%sVsync %s (%ux%u), %s%s",
                         ( pDeviceSettings->d3d10.SyncInterval == 0 ) ? L"off" : L"on", 
                         pDeviceSettings->d3d10.sd.BufferDesc.Width, pDeviceSettings->d3d10.sd.BufferDesc.Height,
                         strFmt, strMultiSample );

@@ -2865,8 +2865,8 @@ HRESULT DXUTCreate3DEnvironment9( IDirect3DDevice9* pd3dDeviceFromApp )
         else
         {
 
-            pD3DDev9->pCurrentDevice = pd3dDevice;
-            pD3DDev9->pRealDevice = pd3dDevice;
+            pD3DDev9->current_d3d9_device_ = pd3dDevice;
+            pD3DDev9->real_d3d9_device_ = pd3dDevice;
             pd3dDevice = (IDirect3DDevice9*) pD3DDev9;
         }
 #endif
