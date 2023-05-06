@@ -18,31 +18,31 @@
 #include "CBRecorder9.h"
 #include "RedirectingDirect3DDevice9.h"
 
+using namespace dxcb;
+
 //#define DEBUG_VS   // Uncomment this line to debug vertex shaders 
 //#define DEBUG_PS   // Uncomment this line to debug pixel shaders 
 
-ID3DXEffectStateManager *pManager = NULL;
-ID3DXEffectStateManager *pOldManager = NULL;
+ID3DXEffectStateManager* pOldManager = nullptr;
 
 RedirectingDirect3DDevice9 D3DDev9;
 RedirectingDirect3DDevice9 *pD3DDev9 = &D3DDev9;
 
-DWORD    g_dwCBMemorySize = 2000;
-DWORD    CBMemory[2000];
+size_t         CBMemory[2000];
 CBMemoryBuffer g_MBuffer;
-CBRecorder9 g_Recorder;
-CBPlayer9 g_Player;
+CBRecorder9    g_Recorder;
+CBPlayer9      g_Player;
 
-CBRecorder9 *g_pRecorder = &g_Recorder;
-CBPlayer9 *g_pPlayer = &g_Player;
+CBRecorder9    *g_pRecorder = &g_Recorder;
+CBPlayer9      *g_pPlayer = &g_Player;
 CBMemoryBuffer *g_pMBuffer = &g_MBuffer;
 
 //--------------------------------------------------------------------------------------
 // Global variables
 //--------------------------------------------------------------------------------------
-ID3DXFont*              g_pFont = NULL;         // Font for drawing text
-ID3DXSprite*            g_pTextSprite = NULL;   // Sprite for batching draw text calls
-ID3DXEffect*            g_pEffect = NULL;       // D3DX effect interface
+ID3DXFont*              g_pFont = nullptr;         // Font for drawing text
+ID3DXSprite*            g_pTextSprite = nullptr;   // Sprite for batching draw text calls
+ID3DXEffect*            g_pEffect = nullptr;       // D3DX effect interface
 CModelViewerCamera      g_Camera;               // A model viewing camera
 bool                    g_bShowHelp = true;     // If true, it renders the UI control text
 CDXUTDialogResourceManager g_DialogResourceManager; // manager for shared resources of dialogs
@@ -72,8 +72,8 @@ int                     g_nShowUI = 2;              // If 2, show UI.  If 1, sho
 //--------------------------------------------------------------------------------------
 //This VB holds float-valued normal, position and texture coordinates for the model (in this case, a box)
 //This will be stream 0
-IDirect3DVertexBuffer9 * g_pVBBox=0;
-IDirect3DIndexBuffer9 *  g_pIBBox=0;
+IDirect3DVertexBuffer9 * g_pVBBox = nullptr;
+IDirect3DIndexBuffer9 *  g_pIBBox = nullptr;
 
 // Format of the box vertices for HW instancing
 struct BOX_VERTEX
@@ -101,7 +101,7 @@ struct BOX_VERTEX_INSTANCE
 //  byte 3: height of box
 //  byte 4: azimuthal rotation of box
 //This will be stream 1
-IDirect3DVertexBuffer9 * g_pVBInstanceData=0;
+IDirect3DVertexBuffer9 * g_pVBInstanceData=nullptr;
 
 //Here is the format of the box positions within the pile:
 struct BOX_INSTANCEDATA_POS
@@ -116,7 +116,7 @@ struct BOX_INSTANCEDATA_POS
 
 //--------------------------------------------------------------------------------------
 // Vertex Declaration for Hardware Instancing
-IDirect3DVertexDeclaration9 *g_pVertexDeclHardware = NULL;
+IDirect3DVertexDeclaration9 *g_pVertexDeclHardware = nullptr;
 D3DVERTEXELEMENT9 g_VertexElemHardware[] = 
 {
     { 0, 0,     D3DDECLTYPE_FLOAT3,     D3DDECLMETHOD_DEFAULT,  D3DDECLUSAGE_POSITION,  0 },
@@ -128,7 +128,7 @@ D3DVERTEXELEMENT9 g_VertexElemHardware[] =
 };
 
 // Vertex Declaration for Shader Instancing
-IDirect3DVertexDeclaration9 *g_pVertexDeclShader = NULL;
+IDirect3DVertexDeclaration9 *g_pVertexDeclShader = nullptr;
 D3DVERTEXELEMENT9 g_VertexElemShader[] = 
 {
     { 0, 0,     D3DDECLTYPE_FLOAT3,     D3DDECLMETHOD_DEFAULT,  D3DDECLUSAGE_POSITION,  0 },
@@ -139,7 +139,7 @@ D3DVERTEXELEMENT9 g_VertexElemShader[] =
 };
 
 // Vertex Declaration for Constants Instancing
-IDirect3DVertexDeclaration9 *g_pVertexDeclConstants = NULL;
+IDirect3DVertexDeclaration9 *g_pVertexDeclConstants = nullptr;
 D3DVERTEXELEMENT9 g_VertexElemConstants[] = 
 {
     { 0, 0,     D3DDECLTYPE_FLOAT3,     D3DDECLMETHOD_DEFAULT,  D3DDECLUSAGE_POSITION,  0 },
@@ -190,7 +190,7 @@ void    OnDestroyBuffers();
 // Entry point to the program. Initializes everything and goes into a message processing 
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
-INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
+INT WINAPI wWinMain( _In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int )
 {
     // Enable run-time memory check for debug builds.
 #if defined(DEBUG) | defined(_DEBUG)
@@ -235,8 +235,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 #endif
     
     // Performance observations should not be compared against dis-similar d3d runtimes (debug v retail)
-    if( GetModuleHandleW( L"d3d9d.dll" ) )
-        g_bRuntimeDebug = true;
+    g_bRuntimeDebug = GetModuleHandleW( L"d3d9d.dll" );
 
     // Pass control to DXUT for handling the message pump and 
     // dispatching render calls. DXUT will call your FrameMove 
@@ -245,7 +244,6 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
     
     // Perform any application-level cleanup here. Direct3D device resources are released within the
     // appropriate callback functions and therefore don't require any cleanup code here.
-    
     return DXUTGetExitCode();
 }
 
@@ -293,10 +291,10 @@ void InitApp()
 
     g_SampleUI2.AddComboBox( IDC_RENDERMETHOD_LIST, 0, 0, 166, 22 );
     g_SampleUI2.GetComboBox( IDC_RENDERMETHOD_LIST )->SetDropHeight( 12*4 );
-    g_SampleUI2.GetComboBox( IDC_RENDERMETHOD_LIST )->AddItem( L"Hardware Instancing", NULL );
-    g_SampleUI2.GetComboBox( IDC_RENDERMETHOD_LIST )->AddItem( L"Shader Instancing", NULL );
-    g_SampleUI2.GetComboBox( IDC_RENDERMETHOD_LIST )->AddItem( L"Constants Instancing", NULL );
-    g_SampleUI2.GetComboBox( IDC_RENDERMETHOD_LIST )->AddItem( L"Stream Instancing", NULL );
+    g_SampleUI2.GetComboBox( IDC_RENDERMETHOD_LIST )->AddItem( L"Hardware Instancing", nullptr );
+    g_SampleUI2.GetComboBox( IDC_RENDERMETHOD_LIST )->AddItem( L"Shader Instancing", nullptr );
+    g_SampleUI2.GetComboBox( IDC_RENDERMETHOD_LIST )->AddItem( L"Constants Instancing", nullptr );
+    g_SampleUI2.GetComboBox( IDC_RENDERMETHOD_LIST )->AddItem( L"Stream Instancing", nullptr );
     g_SampleUI2.GetComboBox( IDC_RENDERMETHOD_LIST )->SetSelectedByIndex( g_iRenderTechnique );
 
     g_SampleUI.EnableKeyboardInput( true );
@@ -397,7 +395,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 void FillFace(
     BOX_VERTEX *pVerts, 
     WORD *pIndices, 
-    int iFace,
+    unsigned short iFace,
     D3DXVECTOR3 vCenter, 
     D3DXVECTOR3 vNormal, 
     D3DXVECTOR3 vUp )
@@ -432,7 +430,7 @@ void FillFace(
 void FillFaceInstance(
     BOX_VERTEX_INSTANCE *pVerts, 
     WORD *pIndices, 
-    int iFace,
+    unsigned short iFace,
     D3DXVECTOR3 vCenter, 
     D3DXVECTOR3 vNormal, 
     D3DXVECTOR3 vUp,
@@ -485,8 +483,8 @@ HRESULT OnCreateBuffers( IDirect3DDevice9* pd3dDevice )
     if( 1 == g_iRenderTechnique )
     {
         g_HandleTechnique = g_pEffect->GetTechniqueByName( "TShader_Instancing" );
-        g_HandleBoxInstance_Position = g_pEffect->GetParameterBySemantic( NULL, "BOXINSTANCEARRAY_POSITION" );
-        g_HandleBoxInstance_Color = g_pEffect->GetParameterBySemantic( NULL, "BOXINSTANCEARRAY_COLOR" );
+        g_HandleBoxInstance_Position = g_pEffect->GetParameterBySemantic( nullptr, "BOXINSTANCEARRAY_POSITION" );
+        g_HandleBoxInstance_Color = g_pEffect->GetParameterBySemantic( nullptr, "BOXINSTANCEARRAY_COLOR" );
 
         // First create the vertex declaration we need
         V_RETURN( pd3dDevice->CreateVertexDeclaration( g_VertexElemShader, &g_pVertexDeclShader ) );
@@ -503,12 +501,12 @@ HRESULT OnCreateBuffers( IDirect3DDevice9* pd3dDevice )
         // Now, lock and fill the model VB and IB
         BOX_VERTEX_INSTANCE *pVerts;
 
-        hr = g_pVBBox->Lock( 0, NULL, (void**) &pVerts, 0 );
+        hr = g_pVBBox->Lock( 0, 0, (void**) &pVerts, 0 );
 
         if( SUCCEEDED( hr ) )
         {
             WORD * pIndices;
-            hr = g_pIBBox->Lock( 0, NULL, (void**) &pIndices, 0 );
+            hr = g_pIBBox->Lock( 0, 0, (void**) &pIndices, 0 );
         
             if( SUCCEEDED( hr ) )
             {
@@ -568,8 +566,8 @@ HRESULT OnCreateBuffers( IDirect3DDevice9* pd3dDevice )
     if( 2 == g_iRenderTechnique )
     {
         g_HandleTechnique = g_pEffect->GetTechniqueByName( "TConstants_Instancing" );
-        g_HandleBoxInstance_Position = g_pEffect->GetParameterBySemantic( NULL, "BOXINSTANCE_POSITION" );
-        g_HandleBoxInstance_Color = g_pEffect->GetParameterBySemantic( NULL, "BOXINSTANCE_COLOR" );
+        g_HandleBoxInstance_Position = g_pEffect->GetParameterBySemantic( nullptr, "BOXINSTANCE_POSITION" );
+        g_HandleBoxInstance_Color = g_pEffect->GetParameterBySemantic( nullptr, "BOXINSTANCE_COLOR" );
 
         // Create the vertex declaration
         V_RETURN( pd3dDevice->CreateVertexDeclaration( g_VertexElemConstants, &g_pVertexDeclConstants ) );
@@ -588,12 +586,12 @@ HRESULT OnCreateBuffers( IDirect3DDevice9* pd3dDevice )
         // Now, lock and fill the model VB and IB:
         BOX_VERTEX * pVerts;
 
-        hr = g_pVBBox->Lock( 0, NULL, (void**) &pVerts, 0 );
+        hr = g_pVBBox->Lock( 0, 0, (void**) &pVerts, 0 );
 
         if( SUCCEEDED( hr ) )
         {
             WORD * pIndices;
-            hr = g_pIBBox->Lock( 0, NULL, (void**) &pIndices, 0 );
+            hr = g_pIBBox->Lock( 0, 0, (void**) &pIndices, 0 );
         
             if( SUCCEEDED( hr ) )
             {
@@ -648,7 +646,7 @@ HRESULT OnCreateBuffers( IDirect3DDevice9* pd3dDevice )
         
         // Lock and fill the instancing buffer
         BOX_INSTANCEDATA_POS *pIPos;
-        hr = g_pVBInstanceData->Lock( 0, NULL,  (void**) &pIPos, 0 );
+        hr = g_pVBInstanceData->Lock( 0, 0,  (void**) &pIPos, 0 );
         
         if( SUCCEEDED( hr ) )
         {
@@ -771,13 +769,13 @@ HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_
     // If this fails, there should be debug output as to 
     // why the .fx file failed to compile
 
-    V_RETURN( D3DXCreateEffectFromFile( pd3dDevice, str, NULL, NULL, dwShaderFlags, 
-                                        NULL, &g_pEffect, NULL ) );
+    V_RETURN( D3DXCreateEffectFromFile( pd3dDevice, str, nullptr, nullptr, dwShaderFlags, 
+                                        nullptr, &g_pEffect, nullptr ) );
 
-    g_HandleWorld = g_pEffect->GetParameterBySemantic( NULL, "WORLD" );
-    g_HandleView = g_pEffect->GetParameterBySemantic( NULL, "VIEW" );
-    g_HandleProjection = g_pEffect->GetParameterBySemantic( NULL, "PROJECTION" );
-    g_HandleTexture = g_pEffect->GetParameterBySemantic( NULL, "TEXTURE" );
+    g_HandleWorld = g_pEffect->GetParameterBySemantic( nullptr, "WORLD" );
+    g_HandleView = g_pEffect->GetParameterBySemantic( nullptr, "VIEW" );
+    g_HandleProjection = g_pEffect->GetParameterBySemantic( nullptr, "PROJECTION" );
+    g_HandleTexture = g_pEffect->GetParameterBySemantic( nullptr, "TEXTURE" );
 
     // Setup the camera's view parameters
     D3DXVECTOR3 vecEye( -24.0f, 36.0f, -36.0f );
@@ -918,7 +916,7 @@ void OnRenderHWInstancing( IDirect3DDevice9* pd3dDevice, double fTime, float fEl
     //pD3DDev9->ReplaceCurrentDevice(g_pRecorder);;
     pd3dDevice = (IDirect3DDevice9*) g_pRecorder;
 
-    g_pMBuffer->SetMemory(CBMemory,g_dwCBMemorySize);
+    g_pMBuffer->SetMemory(CBMemory,std::size(CBMemory));
     g_pRecorder->SetCommandBuffer(g_pMBuffer);
     g_pRecorder->BeginCommandBuffer();
 
@@ -1074,7 +1072,7 @@ void OnRenderShaderInstancing( IDirect3DDevice9* pd3dDevice, double fTime, float
         while( nRemainingBoxes > 0 )
         {
             // determine how many instances are in this batch (up to g_nNumBatchInstance)           
-            int nRenderBoxes = min( nRemainingBoxes, g_nNumBatchInstance );
+            int nRenderBoxes = std::min( nRemainingBoxes, g_nNumBatchInstance );
 
             // set the box instancing array
             V( g_pEffect->SetVectorArray( g_HandleBoxInstance_Position, g_vBoxInstance_Position + g_NumBoxes - nRemainingBoxes, nRenderBoxes) );
@@ -1227,7 +1225,7 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
     D3DXMATRIXA16 mProj;
     
     // Clear the render target and the zbuffer 
-    V( pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB(0, 45, 50, 170), 1.0f, 0) );
+    V( pd3dDevice->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB(0, 45, 50, 170), 1.0f, 0) );
     
     // Render the scene
     if( SUCCEEDED( pd3dDevice->BeginScene() ) )
@@ -1279,7 +1277,7 @@ void RenderText()
 {
     // The helper object simply helps keep track of text position, and color
     // and then it calls pFont->DrawText( m_pSprite, strMsg, -1, &rc, DT_NOCLIP, m_clr );
-    // If NULL is passed in as the sprite object, then it will work however the 
+    // If nullptr is passed in as the sprite object, then it will work however the 
     // pFont->DrawText() will not be batched together.  Batching calls will improves performance.
     CDXUTTextHelper txtHelper( g_pFont, g_pTextSprite, 15 );
     
@@ -1384,7 +1382,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
             g_SettingsDlg.SetActive( !g_SettingsDlg.IsActive() ); 
             break;
         case IDC_TOGGLEUI:  
-            KeyboardProc( 'U', true, false, NULL ); 
+            KeyboardProc( 'U', true, false, nullptr ); 
             break;
         case IDC_NUMBERBOXES_SLIDER:
             g_NumBoxes =  g_SampleUI.GetSlider( IDC_NUMBERBOXES_SLIDER )->GetValue();

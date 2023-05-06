@@ -10,6 +10,9 @@
     <ClCompile Include="PREPROCESSEDBUILD_CBPlayer9.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CBPlayer9.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CBMacros.h">
@@ -30,23 +33,18 @@
     <ClInclude Include="PREPROCESSED_RedirectingDirect3DDevice9.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="CBMemoryBuffer.h">
+    <ClInclude Include="CBMemoryBuffer.h">
       <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="CBRecorder9.h">
+    </ClInclude>
+    <ClInclude Include="CBPlayer9.h">
       <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="CBPlayer9.h">
+    </ClInclude>
+    <ClInclude Include="CBRecorder9.h">
       <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="RedirectingDirect3DDevice9.h">
+    </ClInclude>
+    <ClInclude Include="RedirectingDirect3DDevice9.h">
       <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="CBPlayer9.cpp">
-      <Filter>Source Files</Filter>
-    </CustomBuild>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="preprocess.bat" />
