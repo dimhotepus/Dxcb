@@ -2,130 +2,136 @@
 // See Vincent Scheib rant at
 // http://beautifulpixels.blogspot.com/2008/07/parallel-rendering-with-directx-command.html
 
-#pragma once
+#ifndef DXCB_REDIRECTING_DIRECT3D_DEVICE9_H_
+#define DXCB_REDIRECTING_DIRECT3D_DEVICE9_H_
 
-#ifndef CBD3D_PREPROCESSING
-#define NOMINMAX
+#ifndef DXCB_INVOKE_PREPROCESSOR
 
 #include <d3d9.h>
 #include <d3dx9effect.h>
 
+#include <algorithm>
+
 #include "PREPROCESSED_RedirectingDirect3DDevice9.h"
 
-#else  // CBD3D_PREPROCESSING
+#else  // DXCB_INVOKE_PREPROCESSOR
 
 #define DXCB_BUILTIN_TRACE 1
 
 #if DXCB_BUILTIN_TRACE
-#define TRACEFUNC9(returntype, methodname, type1, arg1, type2, arg2, type3,    \
-                   arg3, type4, arg4, type5, arg5, type6, arg6, type7, arg7,   \
-                   type8, arg8, type9, arg9)                                   \
-  if (should_trace_) {                                                         \
-    char strTrace[700];                                                        \
-    sprintf_s(strTrace,                                                        \
-              "%s %s ( %s  0x%x, %s  0x%x, %s  0x%x, %s  0x%x, %s  0x%x, %s  " \
-              "0x%x, %s  0x%x, %s  0x%x, %s  0x%x)\n",                         \
-              #returntype, #methodname, #type1, (DWORD)arg1, #type2,           \
-              (DWORD)arg2, #type3, (DWORD)arg3, #type4, (DWORD)arg4, #type5,   \
-              (DWORD)arg5, #type6, (DWORD)arg6, #type7, (DWORD)arg7, #type8,   \
-              (DWORD)arg8, #type9, (DWORD)arg9);                               \
-    OutputDebugStringA(strTrace);                                              \
+#define TRACEFUNC9(returntype, methodname, type1, arg1, type2, arg2, type3,   \
+                   arg3, type4, arg4, type5, arg5, type6, arg6, type7, arg7,  \
+                   type8, arg8, type9, arg9)                                  \
+  if (should_trace_) {                                                        \
+    char strTrace[700];                                                       \
+    sprintf_s(                                                                \
+        strTrace,                                                             \
+        "%s %s (%s  0x%zx, %s  0x%zx, %s  0x%zx, %s  0x%zx, %s  0x%zx, %s  "  \
+        "0x%zx, %s  0x%zx, %s  0x%zx, %s  0x%zx)\n",                          \
+        #returntype, #methodname, #type1, (size_t)arg1, #type2, (size_t)arg2, \
+        #type3, (size_t)arg3, #type4, (size_t)arg4, #type5, (size_t)arg5,     \
+        #type6, (size_t)arg6, #type7, (size_t)arg7, #type8, (size_t)arg8,     \
+        #type9, (size_t)arg9);                                                \
+    OutputDebugStringA(strTrace);                                             \
   }
 
-#define TRACEFUNC8(returntype, methodname, type1, arg1, type2, arg2, type3,    \
-                   arg3, type4, arg4, type5, arg5, type6, arg6, type7, arg7,   \
-                   type8, arg8)                                                \
-  if (should_trace_) {                                                         \
-    char strTrace[700];                                                        \
-    sprintf_s(strTrace,                                                        \
-              "%s %s ( %s  0x%x, %s  0x%x, %s  0x%x, %s  0x%x, %s  0x%x, %s  " \
-              "0x%x, %s  0x%x, %s  0x%x)\n",                                   \
-              #returntype, #methodname, #type1, (DWORD)arg1, #type2,           \
-              (DWORD)arg2, #type3, (DWORD)arg3, #type4, (DWORD)arg4, #type5,   \
-              (DWORD)arg5, #type6, (DWORD)arg6, #type7, (DWORD)arg7, #type8,   \
-              (DWORD)arg8);                                                    \
-    OutputDebugStringA(strTrace);                                              \
+#define TRACEFUNC8(returntype, methodname, type1, arg1, type2, arg2, type3,   \
+                   arg3, type4, arg4, type5, arg5, type6, arg6, type7, arg7,  \
+                   type8, arg8)                                               \
+  if (should_trace_) {                                                        \
+    char strTrace[700];                                                       \
+    sprintf_s(                                                                \
+        strTrace,                                                             \
+        "%s %s (%s  0x%zx, %s  0x%zx, %s  0x%zx, %s  0x%zx, %s  0x%zx, %s  "  \
+        "0x%zx, %s  0x%zx, %s  0x%zx)\n",                                     \
+        #returntype, #methodname, #type1, (size_t)arg1, #type2, (size_t)arg2, \
+        #type3, (size_t)arg3, #type4, (size_t)arg4, #type5, (size_t)arg5,     \
+        #type6, (size_t)arg6, #type7, (size_t)arg7, #type8, (size_t)arg8);    \
+    OutputDebugStringA(strTrace);                                             \
   }
 
-#define TRACEFUNC7(returntype, methodname, type1, arg1, type2, arg2, type3,    \
-                   arg3, type4, arg4, type5, arg5, type6, arg6, type7, arg7)   \
-  if (should_trace_) {                                                         \
-    char strTrace[700];                                                        \
-    sprintf_s(strTrace,                                                        \
-              "%s %s ( %s  0x%x, %s  0x%x, %s  0x%x, %s  0x%x, %s  0x%x, %s  " \
-              "0x%x, %s  0x%x)\n",                                             \
-              #returntype, #methodname, #type1, (DWORD)arg1, #type2,           \
-              (DWORD)arg2, #type3, (DWORD)arg3, #type4, (DWORD)arg4, #type5,   \
-              (DWORD)arg5, #type6, (DWORD)arg6, #type7, (DWORD)arg7);          \
-    OutputDebugStringA(strTrace);                                              \
+#define TRACEFUNC7(returntype, methodname, type1, arg1, type2, arg2, type3,   \
+                   arg3, type4, arg4, type5, arg5, type6, arg6, type7, arg7)  \
+  if (should_trace_) {                                                        \
+    char strTrace[700];                                                       \
+    sprintf_s(                                                                \
+        strTrace,                                                             \
+        "%s %s (%s  0x%zx, %s  0x%zx, %s  0x%zx, %s  0x%zx, %s  0x%zx, %s  "  \
+        "0x%zx, %s  0x%zx)\n",                                                \
+        #returntype, #methodname, #type1, (size_t)arg1, #type2, (size_t)arg2, \
+        #type3, (size_t)arg3, #type4, (size_t)arg4, #type5, (size_t)arg5,     \
+        #type6, (size_t)arg6, #type7, (size_t)arg7);                          \
+    OutputDebugStringA(strTrace);                                             \
   }
 
-#define TRACEFUNC6(returntype, methodname, type1, arg1, type2, arg2, type3,    \
-                   arg3, type4, arg4, type5, arg5, type6, arg6)                \
-  if (should_trace_) {                                                         \
-    char strTrace[700];                                                        \
-    sprintf_s(strTrace,                                                        \
-              "%s %s ( %s  0x%x, %s  0x%x, %s  0x%x, %s  0x%x, %s  0x%x, %s  " \
-              "0x%x)\n",                                                       \
-              #returntype, #methodname, #type1, (DWORD)arg1, #type2,           \
-              (DWORD)arg2, #type3, (DWORD)arg3, #type4, (DWORD)arg4, #type5,   \
-              (DWORD)arg5, #type6, (DWORD)arg6);                               \
-    OutputDebugStringA(strTrace);                                              \
+#define TRACEFUNC6(returntype, methodname, type1, arg1, type2, arg2, type3,   \
+                   arg3, type4, arg4, type5, arg5, type6, arg6)               \
+  if (should_trace_) {                                                        \
+    char strTrace[700];                                                       \
+    sprintf_s(                                                                \
+        strTrace,                                                             \
+        "%s %s (%s  0x%zx, %s  0x%zx, %s  0x%zx, %s  0x%zx, %s  0x%zx, %s  "  \
+        "0x%zx)\n",                                                           \
+        #returntype, #methodname, #type1, (size_t)arg1, #type2, (size_t)arg2, \
+        #type3, (size_t)arg3, #type4, (size_t)arg4, #type5, (size_t)arg5,     \
+        #type6, (size_t)arg6);                                                \
+    OutputDebugStringA(strTrace);                                             \
   }
 
-#define TRACEFUNC5(returntype, methodname, type1, arg1, type2, arg2, type3,  \
-                   arg3, type4, arg4, type5, arg5)                           \
-  if (should_trace_) {                                                       \
-    char strTrace[700];                                                      \
-    sprintf_s(strTrace,                                                      \
-              "%s %s ( %s  0x%x, %s  0x%x, %s  0x%x, %s  0x%x, %s  0x%x)\n", \
-              #returntype, #methodname, #type1, (DWORD)arg1, #type2,         \
-              (DWORD)arg2, #type3, (DWORD)arg3, #type4, (DWORD)arg4, #type5, \
-              (DWORD)arg5);                                                  \
-    OutputDebugStringA(strTrace);                                            \
+#define TRACEFUNC5(returntype, methodname, type1, arg1, type2, arg2, type3,   \
+                   arg3, type4, arg4, type5, arg5)                            \
+  if (should_trace_) {                                                        \
+    char strTrace[700];                                                       \
+    sprintf_s(                                                                \
+        strTrace,                                                             \
+        "%s %s (%s  0x%zx, %s  0x%zx, %s  0x%zx, %s  0x%zx, %s  0x%zx)\n",    \
+        #returntype, #methodname, #type1, (size_t)arg1, #type2, (size_t)arg2, \
+        #type3, (size_t)arg3, #type4, (size_t)arg4, #type5, (size_t)arg5);    \
+    OutputDebugStringA(strTrace);                                             \
   }
 
-#define TRACEFUNC4(returntype, methodname, type1, arg1, type2, arg2, type3,  \
-                   arg3, type4, arg4)                                        \
-  if (should_trace_) {                                                       \
-    char strTrace[700];                                                      \
-    sprintf_s(strTrace, "%s %s ( %s  0x%x, %s  0x%x, %s  0x%x, %s  0x%x)\n", \
-              #returntype, #methodname, #type1, (DWORD)arg1, #type2,         \
-              (DWORD)arg2, #type3, (DWORD)arg3, #type4, (DWORD)arg4);        \
-    OutputDebugStringA(strTrace);                                            \
+#define TRACEFUNC4(returntype, methodname, type1, arg1, type2, arg2, type3, \
+                   arg3, type4, arg4)                                       \
+  if (should_trace_) {                                                      \
+    char strTrace[700];                                                     \
+    sprintf_s(strTrace,                                                     \
+              "%s %s (%s  0x%zx, %s  0x%zx, %s  0x%zx, %s  0x%zx)\n",       \
+              #returntype, #methodname, #type1, (size_t)arg1, #type2,       \
+              (size_t)arg2, #type3, (size_t)arg3, #type4, (size_t)arg4);    \
+    OutputDebugStringA(strTrace);                                           \
   }
 
 #define TRACEFUNC3(returntype, methodname, type1, arg1, type2, arg2, type3, \
                    arg3)                                                    \
   if (should_trace_) {                                                      \
     char strTrace[700];                                                     \
-    sprintf_s(strTrace, "%s %s ( %s  0x%x, %s  0x%x, %s  0x%x)\n",          \
-              #returntype, #methodname, #type1, (DWORD)arg1, #type2,        \
-              (DWORD)arg2, #type3, (DWORD)arg3);                            \
+    sprintf_s(strTrace, "%s %s (%s  0x%zx, %s  0x%zx, %s  0x%zx)\n",        \
+              #returntype, #methodname, #type1, (size_t)arg1, #type2,       \
+              (size_t)arg2, #type3, (size_t)arg3);                          \
     OutputDebugStringA(strTrace);                                           \
   }
 
-#define TRACEFUNC2(returntype, methodname, type1, arg1, type2, arg2)  \
-  if (should_trace_) {                                                \
-    char strTrace[700];                                               \
-    sprintf_s(strTrace, "%s %s ( %s  0x%x, %s  0x%x)\n", #returntype, \
-              #methodname, #type1, (DWORD)arg1, #type2, (DWORD)arg2); \
-    OutputDebugStringA(strTrace);                                     \
+#define TRACEFUNC2(returntype, methodname, type1, arg1, type2, arg2)    \
+  if (should_trace_) {                                                  \
+    char strTrace[700];                                                 \
+    sprintf_s(strTrace, "%s %s (%s  0x%zx, %s  0x%zx)\n", #returntype,  \
+              #methodname, #type1, (size_t)arg1, #type2, (size_t)arg2); \
+    OutputDebugStringA(strTrace);                                       \
   }
 
 #define TRACEFUNC1(returntype, methodname, type1, arg1)                  \
   if (should_trace_) {                                                   \
     char strTrace[700];                                                  \
-    sprintf_s(strTrace, "%s %s ( %s  0x%x)\n", #returntype, #methodname, \
-              #type1, (DWORD)arg1);                                      \
+    sprintf_s(strTrace, "%s %s (%s  0x%zx)\n", #returntype, #methodname, \
+              #type1, (size_t)arg1);                                     \
     OutputDebugStringA(strTrace);                                        \
   }
 
-#define TRACEFUNC0(returntype, methodname)                        \
-  if (should_trace_) {                                            \
-    char strTrace[700];                                           \
-    sprintf_s(strTrace, "%s %s ( )\n", #returntype, #methodname); \
-    OutputDebugStringA(strTrace);                                 \
+#define TRACEFUNC0(returntype, methodname)                       \
+  if (should_trace_) {                                           \
+    char strTrace[700];                                          \
+    sprintf_s(strTrace, "%s %s ()\n", #returntype, #methodname); \
+    OutputDebugStringA(strTrace);                                \
   }
 #else
 #define TRACEFUNC9(returntype, methodname, type1, arg1, type2, arg2, type3,  \
@@ -385,7 +391,7 @@ class RedirectingDirect3DDevice9 : public IDirect3DDevice9 {
   STDREDIRFUNC7(CreateCubeTexture, UINT, EdgeLength, UINT, Levels, DWORD, Usage,
                 D3DFORMAT, Format, D3DPOOL, Pool, IDirect3DCubeTexture9 **,
                 ppCubeTexture, HANDLE *, pSharedHandle);
-  STDREDIRFUNC6(CreateVertexBuffer, UINT, Length, DWORD, Usage, DWORD, FVF,
+  STDREDIRFUNC6(CreateVertexBuffer, UINT, Length, DWORD, Usage, DWORD, Fvf,
                 D3DPOOL, Pool, IDirect3DVertexBuffer9 **, ppVertexBuffer,
                 HANDLE *, pSharedHandle);
   STDREDIRFUNC6(CreateIndexBuffer, UINT, Length, DWORD, Usage, D3DFORMAT,
@@ -482,7 +488,7 @@ class RedirectingDirect3DDevice9 : public IDirect3DDevice9 {
   STDREDIRFUNC2(CreateVertexDeclaration, CONST D3DVERTEXELEMENT9 *,
                 pVertexElements, IDirect3DVertexDeclaration9 **, ppDecl);
   STDREDIRFUNC1(GetVertexDeclaration, IDirect3DVertexDeclaration9 **, ppDecl);
-  STDREDIRFUNC1(SetFVF, DWORD, FVF);
+  STDREDIRFUNC1(SetFVF, DWORD, Fvf);
   STDREDIRFUNC1(GetFVF, DWORD *, pFVF);
   STDREDIRFUNC2(CreateVertexShader, CONST DWORD *, pFunction,
                 IDirect3DVertexShader9 **, ppShader);
@@ -566,11 +572,11 @@ class RedirectingEffectStateManager : public ID3DXEffectStateManager {
     return current_d3d9_device_->QueryInterface(iid, ppv);
   }
   ULONG __stdcall AddRef() {
-    ULONG ret = std::max(0, ++ref_counter_);
+    ULONG ret = std::max(0UL, ++ref_counter_);
     return ret;
   }
   ULONG __stdcall Release() {
-    ULONG ret = std::max(0, --ref_counter_);
+    ULONG ret = std::max(0UL, --ref_counter_);
     return ret;
   }
 
@@ -593,7 +599,7 @@ class RedirectingEffectStateManager : public ID3DXEffectStateManager {
   STDREDIRFUNC3(SetSamplerState, DWORD, Sampler, D3DSAMPLERSTATETYPE, Type,
                 DWORD, Value);
   STDREDIRFUNC1(SetNPatchMode, FLOAT, NumSegments);
-  STDREDIRFUNC1(SetFVF, DWORD, FVF);
+  STDREDIRFUNC1(SetFVF, DWORD, Fvf);
   STDREDIRFUNC1(SetVertexShader, LPDIRECT3DVERTEXSHADER9, pShader);
   STDREDIRFUNC3(SetVertexShaderConstantF, UINT, RegisterIndex, CONST FLOAT *,
                 pConstantData, UINT, RegisterCount);
@@ -617,4 +623,6 @@ class RedirectingEffectStateManager : public ID3DXEffectStateManager {
 
 }  // namespace dxcb
 
-#endif
+#endif  // DXCB_INVOKE_PREPROCESSOR
+
+#endif  // DXCB_REDIRECTING_DIRECT3D_DEVICE9_H_

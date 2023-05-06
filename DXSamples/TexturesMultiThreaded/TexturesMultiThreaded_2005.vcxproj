@@ -91,7 +91,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)DXUT\Core;$(ProjectDir)DXUT\Optional;$(SolutionDir)dxcb;$(SolutionDir)dx9sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dx9sdk;$(SolutionDir)DXUT\Core;$(SolutionDir)DXUT\Optional;$(SolutionDir)dxcb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;DEBUG;PROFILE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -104,7 +104,7 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/IGNORE:4089 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>imm32.lib;version.lib;dxguid.lib;d3dx9.lib;d3dx10.lib;d3d9.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imm32.lib;version.lib;dxguid.lib;dsound.lib;d3dx9.lib;d3dx10.lib;d3d9.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)dx9sdk\lib\$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)TexturesMultiThreaded.pdb</ProgramDatabaseFile>
@@ -124,7 +124,7 @@ copy "$(SolutionDir)dx9sdk\bin\$(PlatformShortName)\d3dx10_43.dll" "$(TargetDir)
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)DXUT\Core;$(ProjectDir)DXUT\Optional;$(SolutionDir)dxcb;$(SolutionDir)dx9sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dx9sdk;$(SolutionDir)DXUT\Core;$(SolutionDir)DXUT\Optional;$(SolutionDir)dxcb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;DEBUG;PROFILE;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -138,7 +138,7 @@ copy "$(SolutionDir)dx9sdk\bin\$(PlatformShortName)\d3dx10_43.dll" "$(TargetDir)
     </ClCompile>
     <Link>
       <AdditionalOptions>/IGNORE:4089 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>imm32.lib;version.lib;dxguid.lib;d3dx9.lib;d3dx10.lib;d3d9.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imm32.lib;version.lib;dxguid.lib;dsound.lib;d3dx9.lib;d3dx10.lib;d3d9.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)dx9sdk\lib\$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)TexturesMultiThreaded.pdb</ProgramDatabaseFile>
@@ -159,7 +159,7 @@ copy "$(SolutionDir)dx9sdk\bin\$(PlatformShortName)\d3dx10_43.dll" "$(TargetDir)
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>$(ProjectDir)DXUT\Core;$(ProjectDir)DXUT\Optional;$(SolutionDir)dxcb;$(SolutionDir)dx9sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dx9sdk;$(SolutionDir)DXUT\Core;$(SolutionDir)DXUT\Optional;$(SolutionDir)dxcb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -173,7 +173,7 @@ copy "$(SolutionDir)dx9sdk\bin\$(PlatformShortName)\d3dx10_43.dll" "$(TargetDir)
     </ClCompile>
     <Link>
       <AdditionalOptions>/IGNORE:4089 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>imm32.lib;version.lib;dxguid.lib;d3dx9.lib;d3dx10.lib;d3dx9.lib;d3d9.lib;d3dx10.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imm32.lib;version.lib;dxguid.lib;dsound.lib;d3dx9.lib;d3dx10.lib;d3dx9.lib;d3d9.lib;d3dx10.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)dx9sdk\lib\$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -196,7 +196,7 @@ copy "$(SolutionDir)dx9sdk\bin\$(PlatformShortName)\d3dx10_43.dll" "$(TargetDir)
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>$(ProjectDir)DXUT\Core;$(ProjectDir)DXUT\Optional;$(SolutionDir)dxcb;$(SolutionDir)dx9sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dx9sdk;$(SolutionDir)DXUT\Core;$(SolutionDir)DXUT\Optional;$(SolutionDir)dxcb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -211,7 +211,7 @@ copy "$(SolutionDir)dx9sdk\bin\$(PlatformShortName)\d3dx10_43.dll" "$(TargetDir)
     </ClCompile>
     <Link>
       <AdditionalOptions>/IGNORE:4089 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>imm32.lib;version.lib;dxguid.lib;d3dx9.lib;d3dx10.lib;d3dx9.lib;d3d9.lib;d3dx10.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imm32.lib;version.lib;dxguid.lib;dsound.lib;d3dx9.lib;d3dx10.lib;d3dx9.lib;d3d9.lib;d3dx10.lib;winmm.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)dx9sdk\lib\$(PlatformShortName);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -230,34 +230,45 @@ copy "$(SolutionDir)dx9sdk\bin\$(PlatformShortName)\d3dx10_43.dll" "$(TargetDir)
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\dx9sdk\dxerr.cpp" />
-    <ClCompile Include="DXUT\Core\DXUT.cpp" />
-    <ClCompile Include="DXUT\Core\DXUTenum.cpp" />
-    <ClCompile Include="DXUT\Core\DXUTmisc.cpp" />
-    <ClCompile Include="DXUT\Optional\DXUTcamera.cpp" />
-    <ClCompile Include="DXUT\Optional\DXUTgui.cpp" />
-    <ClCompile Include="DXUT\Optional\DXUTres.cpp" />
-    <ClCompile Include="DXUT\Optional\DXUTsettingsdlg.cpp" />
-    <ClCompile Include="DXUT\Optional\SDKmesh.cpp" />
-    <ClCompile Include="DXUT\Optional\SDKmisc.cpp" />
+    <ClCompile Include="..\..\DXUT\Core\DXUT.cpp" />
+    <ClCompile Include="..\..\DXUT\Core\DXUTenum.cpp" />
+    <ClCompile Include="..\..\DXUT\Core\DXUTmisc.cpp" />
+    <ClCompile Include="..\..\DXUT\Optional\DXUTcamera.cpp" />
+    <ClCompile Include="..\..\DXUT\Optional\DXUTgui.cpp" />
+    <ClCompile Include="..\..\DXUT\Optional\DXUTres.cpp" />
+    <ClCompile Include="..\..\DXUT\Optional\DXUTsettingsdlg.cpp" />
+    <ClCompile Include="..\..\DXUT\Optional\DXUTShapes.cpp" />
+    <ClCompile Include="..\..\DXUT\Optional\SDKmesh.cpp" />
+    <ClCompile Include="..\..\DXUT\Optional\SDKmisc.cpp" />
+    <ClCompile Include="..\..\DXUT\Optional\SDKsound.cpp" />
+    <ClCompile Include="..\..\DXUT\Optional\SDKwavefile.cpp" />
     <ClCompile Include="TexturesMultiThreaded.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DXUT\Core\DXUT.h" />
-    <ClInclude Include="DXUT\Core\DXUTenum.h" />
-    <ClInclude Include="DXUT\Core\DXUTmisc.h" />
-    <ClInclude Include="DXUT\Optional\DXUTcamera.h" />
-    <ClInclude Include="DXUT\Optional\DXUTgui.h" />
-    <ClInclude Include="DXUT\Optional\DXUTres.h" />
-    <ClInclude Include="DXUT\Optional\DXUTsettingsdlg.h" />
-    <ClInclude Include="DXUT\Optional\SDKmesh.h" />
-    <ClInclude Include="DXUT\Optional\SDKmisc.h" />
+    <ClInclude Include="..\..\DXUT\Core\DXUT.h" />
+    <ClInclude Include="..\..\DXUT\Core\DXUTenum.h" />
+    <ClInclude Include="..\..\DXUT\Core\DXUTmisc.h" />
+    <ClInclude Include="..\..\DXUT\Optional\DXUTcamera.h" />
+    <ClInclude Include="..\..\DXUT\Optional\DXUTgui.h" />
+    <ClInclude Include="..\..\DXUT\Optional\DXUTres.h" />
+    <ClInclude Include="..\..\DXUT\Optional\DXUTsettingsdlg.h" />
+    <ClInclude Include="..\..\DXUT\Optional\DXUTShapes.h" />
+    <ClInclude Include="..\..\DXUT\Optional\SDKmesh.h" />
+    <ClInclude Include="..\..\DXUT\Optional\SDKmisc.h" />
+    <ClInclude Include="..\..\DXUT\Optional\SDKsound.h" />
+    <ClInclude Include="..\..\DXUT\Optional\SDKwavefile.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="DXUT\Optional\directx.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="TexturesMultiThreaded.rc" />
+    <ResourceCompile Include="TexturesMultiThreaded.rc">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\dxcb\dxcb.vcxproj">

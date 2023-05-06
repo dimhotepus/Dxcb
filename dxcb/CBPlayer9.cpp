@@ -3,8 +3,7 @@
 // See Vincent Scheib rant at
 // http://beautifulpixels.blogspot.com/2008/07/parallel-rendering-with-directx-command.html
 
-#ifndef CBD3D_PREPROCESSING
-#define NOMINMAX
+#ifndef DXCB_INVOKE_PREPROCESSOR
 
 #include <d3d9.h>
 
@@ -281,4 +280,4 @@ DXCB_STD_METHOD_PLAY_CONSTS(CBPlayer9::DoSetPixelShaderConstantB,
 
 }  // namespace dxcb
 
-#endif
+#endif  // DXCB_INVOKE_PREPROCESSOR

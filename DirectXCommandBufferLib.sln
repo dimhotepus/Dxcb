@@ -15,7 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		LICENSE.txt = LICENSE.txt
 		MICROSOFT SOFTWARE LICENSE TERMS.doc = MICROSOFT SOFTWARE LICENSE TERMS.doc
-		readme.txt = readme.txt
+		.github\workflows\msbuild.yml = .github\workflows\msbuild.yml
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dxcb", "dxcb\dxcb.vcxproj", "{84CBBAB9-10B2-4A0A-92CE-9D24F4FFE713}"

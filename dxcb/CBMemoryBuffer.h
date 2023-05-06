@@ -5,8 +5,7 @@
 #ifndef DXCB_CBMEMORYBUFFER_H_
 #define DXCB_CBMEMORYBUFFER_H_
 
-#ifndef CBD3D_PREPROCESSING
-#define NOMINMAX
+#ifndef DXCB_INVOKE_PREPROCESSOR
 
 #include <d3d9.h>
 
@@ -15,6 +14,7 @@
 #include <type_traits>
 
 #include "PREPROCESSED_CBMemoryBuffer.h"
+
 #else
 
 #include "CBMacros.h"
@@ -454,5 +454,5 @@ class CBMemoryBuffer {
 
 }  // namespace dxcb
 
-#endif  // CBD3D_PREPROCESSING
+#endif  // DXCB_INVOKE_PREPROCESSOR
 #endif  // DXCB_CBMEMORYBUFFER_H_

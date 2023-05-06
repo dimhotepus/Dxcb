@@ -2,10 +2,10 @@
 // See Vincent Scheib rant at
 // http://beautifulpixels.blogspot.com/2008/07/parallel-rendering-with-directx-command.html
 
-#ifndef DXCB_CBPLAYER_H_
-#define DXCB_CBPLAYER_H_
+#ifndef DXCB_CBPLAYER9_H_
+#define DXCB_CBPLAYER9_H_
 
-#ifndef CBD3D_PREPROCESSING
+#ifndef DXCB_INVOKE_PREPROCESSOR
 #include "CBMemoryBuffer.h"
 #include "PREPROCESSED_CBPlayer9.h"
 #else
@@ -188,5 +188,6 @@ using PlayerMemberPtr = void (CBPlayer9::*)();
 
 }  // namespace dxcb
 
-#endif  // CBD3D_PREPROCESSING
-#endif  // DXCB_CBPLAYER_H_
+#endif  // DXCB_INVOKE_PREPROCESSOR
+
+#endif  // DXCB_CBPLAYER9_H_

@@ -2,14 +2,15 @@
 // See Vincent Scheib rant at
 // http://beautifulpixels.blogspot.com/2008/07/parallel-rendering-with-directx-command.html
 
-#pragma once
+#ifndef DXCB_CBRECORDER9_H_
+#define DXCB_CBRECORDER9_H_
 
-#ifndef CBD3D_PREPROCESSING
+#ifndef DXCB_INVOKE_PREPROCESSOR
 
 #include "CBMemoryBuffer.h"
 #include "PREPROCESSED_CBRecorder9.h"
 
-#else  // CBD3D_PREPROCESSING
+#else  // DXCB_INVOKE_PREPROCESSOR
 
 #include "CBMacros.h"
 
@@ -131,7 +132,7 @@ class CBRecorder9 : public IDirect3DDevice9 {
                           UINT, VertexCount, IDirect3DVertexBuffer9*,
                           pDestBuffer, IDirect3DVertexDeclaration9*,
                           pVertexDecl, DWORD, Flags)
-  DXCB_STD_METHOD_RECORD1(SetFVF, DWORD, FVF)
+  DXCB_STD_METHOD_RECORD1(SetFVF, DWORD, Fvf)
   DXCB_STD_METHOD_RECORD1(SetVertexShader, IDirect3DVertexShader9*, pShader)
   DXCB_STD_METHOD_RECORD1(SetPixelShader, IDirect3DPixelShader9*, pShader)
   DXCB_STD_METHOD_RECORD3(DrawRectPatch, UINT, Handle, CONST float*, pNumSegs,
@@ -255,7 +256,7 @@ class CBRecorder9 : public IDirect3DDevice9 {
    IDirect3DCubeTexture9** ppCubeTexture,
    HANDLE* pSharedHandle) DXCB_D3DERR_NOT_IMPLEMENTED;
   STDMETHOD(CreateVertexBuffer)
-  (UINT Length, DWORD Usage, DWORD FVF, D3DPOOL Pool,
+  (UINT Length, DWORD Usage, DWORD Fvf, D3DPOOL Pool,
    IDirect3DVertexBuffer9** ppVertexBuffer,
    HANDLE* pSharedHandle) DXCB_D3DERR_NOT_IMPLEMENTED;
   STDMETHOD(CreateIndexBuffer)
@@ -314,4 +315,6 @@ class CBRecorder9 : public IDirect3DDevice9 {
 
 }  // namespace dxcb
 
-#endif  // CBD3D_PREPROCESSING is defined
+#endif  // DXCB_INVOKE_PREPROCESSOR
+
+#endif  // DXCB_CBRECORDER9_H_

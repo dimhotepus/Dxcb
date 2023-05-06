@@ -78,11 +78,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <PreBuildEvent>
-      <Command />
+      <Command>preprocess CBMemoryBuffer.h &amp;&amp; preprocess CBRecorder9.h &amp;&amp; preprocess RedirectingDirect3DDevice9.h &amp;&amp; preprocess CBPlayer9.h &amp;&amp; preprocess CBPlayer9.cpp</Command>
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <PreprocessToFile>false</PreprocessToFile>
       <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
@@ -101,12 +101,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>preprocess CBMemoryBuffer.h &amp;&amp; preprocess CBRecorder9.h &amp;&amp; preprocess RedirectingDirect3DDevice9.h &amp;&amp; preprocess CBPlayer9.h &amp;&amp; preprocess CBPlayer9.cpp</Command>
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <PreprocessToFile>false</PreprocessToFile>
       <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
@@ -126,11 +125,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <PreBuildEvent>
-      <Command />
+      <Command>preprocess CBMemoryBuffer.h &amp;&amp; preprocess CBRecorder9.h &amp;&amp; preprocess RedirectingDirect3DDevice9.h &amp;&amp; preprocess CBPlayer9.h &amp;&amp; preprocess CBPlayer9.cpp</Command>
     </PreBuildEvent>
     <ClCompile>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader />
       <WarningLevel>Level4</WarningLevel>
@@ -147,12 +146,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <PreBuildEvent>
-      <Command>
-      </Command>
+      <Command>preprocess CBMemoryBuffer.h &amp;&amp; preprocess CBRecorder9.h &amp;&amp; preprocess RedirectingDirect3DDevice9.h &amp;&amp; preprocess CBPlayer9.h &amp;&amp; preprocess CBPlayer9.cpp</Command>
     </PreBuildEvent>
     <ClCompile>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NOMINMAX;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
@@ -169,94 +167,25 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CBMacros.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </Command>
-    </ClInclude>
-    <CustomBuild Include="CBMemoryBuffer.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">preprocess %(Filename)%(Extension)</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">preprocess %(Filename)%(Extension)</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">preprocess %(Filename)%(Extension)</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">preprocess %(Filename)%(Extension)</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="CBPlayer9.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">preprocess %(Filename)%(Extension)</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">preprocess %(Filename)%(Extension)</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">preprocess %(Filename)%(Extension)</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">preprocess %(Filename)%(Extension)</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="CBRecorder9.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">preprocess %(Filename)%(Extension)</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">preprocess %(Filename)%(Extension)</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">preprocess %(Filename)%(Extension)</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">preprocess %(Filename)%(Extension)</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-    </CustomBuild>
+    <ClInclude Include="CBMacros.h" />
+    <ClInclude Include="CBMemoryBuffer.h" />
+    <ClInclude Include="CBPlayer9.h" />
+    <ClInclude Include="CBRecorder9.h" />
     <ClInclude Include="PREPROCESSED_CBMemoryBuffer.h" />
     <ClInclude Include="PREPROCESSED_CBPlayer9.h" />
     <ClInclude Include="PREPROCESSED_CBRecorder9.h" />
     <ClInclude Include="PREPROCESSED_RedirectingDirect3DDevice9.h" />
-    <CustomBuild Include="RedirectingDirect3DDevice9.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">preprocess %(Filename)%(Extension)</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">preprocess %(Filename)%(Extension)</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">preprocess %(Filename)%(Extension)</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">preprocess %(Filename)%(Extension)</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-    </CustomBuild>
+    <ClInclude Include="RedirectingDirect3DDevice9.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CBMemoryBuffer.cpp" />
-    <CustomBuild Include="CBPlayer9.cpp">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">preprocess %(Filename)%(Extension)</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">preprocess %(Filename)%(Extension)</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">preprocess %(Filename)%(Extension)</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">preprocess %(Filename)%(Extension)</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CBMacros.h;CBMemoryBuffer.h;CBPlayer9.h;CBRecorder9.h;RedirectingDirect3DDevice9.h;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PREPROCESSED_%(Filename)%(Extension);%(Outputs)</Outputs>
-    </CustomBuild>
+    <ClCompile Include="CBPlayer9.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="PREPROCESSEDBUILD_CBPlayer9.cpp" />
     <ClCompile Include="PREPROCESSED_CBPlayer9.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
