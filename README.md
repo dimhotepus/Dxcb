@@ -1,6 +1,6 @@
 ![CI](https://github.com/dimhotepus/DirectXCommandBufferLib-v1/actions/workflows/msbuild.yml/badge.svg?branch=main) DirectX Command Buffer Lib
-Version 1.0, 7/21/2008
-Version 2.0, 5/6/2023
+* Version 1.0, 7/21/2008
+* Version 2.0, 5/6/2023
 
 See license.txt for copyright and license information.
 ________________________________________________________________________________
