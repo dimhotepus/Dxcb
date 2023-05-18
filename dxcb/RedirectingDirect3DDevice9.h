@@ -10,6 +10,7 @@
 #include <d3d9.h>
 #include <d3dx9effect.h>
 
+#include <atomic>
 #include <algorithm>
 
 #include "PREPROCESSED_RedirectingDirect3DDevice9.h"
@@ -636,12 +637,10 @@ class RedirectingEffectStateManager : public ID3DXEffectStateManager {
     return current_d3d9_device_->QueryInterface(iid, ppv);
   }
   ULONG __stdcall AddRef() {
-    ULONG ret = std::max(0UL, ++ref_counter_);
-    return ret;
+    return ++ref_counter_;
   }
   ULONG __stdcall Release() {
-    ULONG ret = std::max(0UL, --ref_counter_);
-    return ret;
+    return --ref_counter_;
   }
 
   // The following methods are called by the Effect when it wants to make
@@ -683,7 +682,7 @@ class RedirectingEffectStateManager : public ID3DXEffectStateManager {
 
  private:
   IDirect3DDevice9 *current_d3d9_device_;
-  ULONG ref_counter_;
+  std::atomic_ulong ref_counter_;
   bool should_trace_;
 };
 
