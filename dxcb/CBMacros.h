@@ -737,6 +737,11 @@
                                   arg8, arg9)))                              \
       OutputDebugStringA(__FUNCTION__ " failed in playback\n");              \
   }
+#define DXCB_ULONG_METHOD_PLAY0(func, name) \
+  void func() {                             \
+    DXCB_FUNC_DEBUG_TRACE0();               \
+    d3d9_device_->name();                   \
+  }
 // Generated from MacroGenerator_Playback.xls, do not modify here
 // -------^
 
