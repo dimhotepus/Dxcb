@@ -160,8 +160,9 @@ void CBPlayer9::Playback(IDirect3DDevice9 *device, CBMemoryBuffer *buffer) {
 void CBPlayer9::DoNULLCall() DXCB_VOID_NOT_IMPLEMENTED;
 void CBPlayer9::DoQueryInterface() DXCB_VOID_NOT_IMPLEMENTED;
 
-DXCB_STD_METHOD_PLAY0(CBPlayer9::DoAddRef, AddRef);
-DXCB_STD_METHOD_PLAY0(CBPlayer9::DoRelease, Release);
+DXCB_ULONG_METHOD_PLAY0(CBPlayer9::DoAddRef, AddRef);
+DXCB_ULONG_METHOD_PLAY0(CBPlayer9::DoRelease, Release);
+
 DXCB_STD_METHOD_PLAY3(CBPlayer9::DoDrawPrimitive, DrawPrimitive,
                       D3DPRIMITIVETYPE, UINT, UINT);
 DXCB_STD_METHOD_PLAY6(CBPlayer9::DoDrawIndexedPrimitive, DrawIndexedPrimitive,
