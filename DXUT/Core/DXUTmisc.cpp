@@ -5,7 +5,7 @@
 //
 // Copyright (c) Microsoft Corporation. All rights reserved
 //--------------------------------------------------------------------------------------
-#include "dxut.h"
+#include "DXUT.h"
 #include <xinput.h>
 #define DXUT_GAMEPAD_TRIGGER_THRESHOLD      30
 #undef min // use __min instead
@@ -29,7 +29,7 @@ CDXUTTimer::CDXUTTimer()
     m_llBaseTime        = 0;
 
     // Use QueryPerformanceFrequency to get the frequency of the counter
-    LARGE_INTEGER qwTicksPerSec = { 0 };
+    LARGE_INTEGER qwTicksPerSec = { 0, 0 };
     QueryPerformanceFrequency( &qwTicksPerSec );
     m_llQPFTicksPerSec = qwTicksPerSec.QuadPart;
 
@@ -53,7 +53,7 @@ void CDXUTTimer::Reset()
 void CDXUTTimer::Start()
 {
     // Get the current time
-    LARGE_INTEGER qwTime = { 0 };
+    LARGE_INTEGER qwTime = { 0, 0 };
     QueryPerformanceCounter( &qwTime );
 
     if( m_bTimerStopped )
@@ -69,7 +69,7 @@ void CDXUTTimer::Stop()
 {
     if( !m_bTimerStopped )
     {
-        LARGE_INTEGER qwTime = { 0 };
+        LARGE_INTEGER qwTime = { 0, 0 };
         QueryPerformanceCounter( &qwTime );
         m_llStopTime = qwTime.QuadPart;
         m_llLastElapsedTime = qwTime.QuadPart;
@@ -88,7 +88,7 @@ void CDXUTTimer::Advance()
 //--------------------------------------------------------------------------------------
 double CDXUTTimer::GetAbsoluteTime()
 {
-    LARGE_INTEGER qwTime = { 0 };
+    LARGE_INTEGER qwTime = { 0, 0 };
     QueryPerformanceCounter( &qwTime );
 
     double fTime = qwTime.QuadPart / (double) m_llQPFTicksPerSec;
@@ -206,7 +206,7 @@ void CDXUTTimer::LimitThreadAffinityToCurrentProc()
 //--------------------------------------------------------------------------------------
 LPCWSTR WINAPI DXUTD3DFormatToString( D3DFORMAT format, bool bWithPrefix )
 {
-    WCHAR* pstr = NULL;
+    const WCHAR* pstr = NULL;
     switch( format )
     {
     case D3DFMT_UNKNOWN:         pstr = L"D3DFMT_UNKNOWN"; break;
@@ -279,7 +279,7 @@ LPCWSTR WINAPI DXUTD3DFormatToString( D3DFORMAT format, bool bWithPrefix )
 //--------------------------------------------------------------------------------------
 LPCWSTR WINAPI DXUTDXGIFormatToString( DXGI_FORMAT format, bool bWithPrefix )
 {
-    WCHAR* pstr = NULL;
+    const WCHAR* pstr = NULL;
     switch( format )
     {
         case DXGI_FORMAT_R32G32B32A32_TYPELESS: pstr = L"DXGI_FORMAT_R32G32B32A32_TYPELESS"; break;
@@ -732,7 +732,7 @@ void WINAPI DXUTTraceDecl( D3DVERTEXELEMENT9 decl[MAX_FVF_DECL_SIZE] )
 #define TRACE_ID(iD) case iD: return L#iD;
 
 //--------------------------------------------------------------------------------------
-WCHAR* WINAPI DXUTTraceWindowsMessage( UINT uMsg )
+const WCHAR* WINAPI DXUTTraceWindowsMessage( UINT uMsg )
 {
     switch( uMsg )
     {
@@ -956,7 +956,7 @@ WCHAR* WINAPI DXUTTraceWindowsMessage( UINT uMsg )
 
 
 //--------------------------------------------------------------------------------------
-WCHAR* WINAPI DXUTTraceD3DDECLTYPEtoString( BYTE t )
+const WCHAR* WINAPI DXUTTraceD3DDECLTYPEtoString( BYTE t )
 {
     switch( t )
     {
@@ -982,7 +982,7 @@ WCHAR* WINAPI DXUTTraceD3DDECLTYPEtoString( BYTE t )
     }
 }
 
-WCHAR* WINAPI DXUTTraceD3DDECLMETHODtoString( BYTE m )
+const WCHAR* WINAPI DXUTTraceD3DDECLMETHODtoString( BYTE m )
 {
     switch( m )
     {
@@ -997,7 +997,7 @@ WCHAR* WINAPI DXUTTraceD3DDECLMETHODtoString( BYTE m )
     }
 }
 
-WCHAR* WINAPI DXUTTraceD3DDECLUSAGEtoString( BYTE u )
+const WCHAR* WINAPI DXUTTraceD3DDECLUSAGEtoString( BYTE u )
 {
     switch( u )
     {
@@ -1318,12 +1318,11 @@ IDirect3DDevice9* WINAPI DXUTCreateRefDevice9( HWND hWnd, bool bNullRef )
 //--------------------------------------------------------------------------------------
 ID3D10Device* WINAPI DXUTCreateRefDevice10( bool bNullRef )
 {
-    HRESULT hr = S_OK;
     ID3D10Device* pDevice = NULL;
-    hr = DXUT_Dynamic_D3D10CreateDevice(
+    HRESULT hr = DXUT_Dynamic_D3D10CreateDevice(
             NULL, bNullRef ? D3D10_DRIVER_TYPE_NULL : D3D10_DRIVER_TYPE_REFERENCE,
             (HMODULE)0, 0, 0, D3D10_SDK_VERSION, &pDevice);
-    return pDevice;
+    return SUCCEEDED(hr) ? pDevice : NULL;
 }
 
 //--------------------------------------------------------------------------------------

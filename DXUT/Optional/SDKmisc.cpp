@@ -5,7 +5,7 @@
 //
 // Copyright (c) Microsoft Corporation. All rights reserved
 //--------------------------------------------------------------------------------------
-#include "dxut.h"
+#include "DXUT.h"
 #include "SDKmisc.h"
 #include "DXUTres.h"
 #undef min // use __min instead
@@ -26,7 +26,7 @@ CDXUTResourceCache& WINAPI DXUTGetGlobalResourceCache()
 // Internal functions forward declarations
 //--------------------------------------------------------------------------------------
 bool DXUTFindMediaSearchTypicalDirs( WCHAR* strSearchPath, int cchSearch, LPCWSTR strLeaf, WCHAR* strExePath, WCHAR* strExeName );
-bool DXUTFindMediaSearchParentDirs( WCHAR* strSearchPath, int cchSearch, WCHAR* strStartAt, WCHAR* strLeafName );
+bool DXUTFindMediaSearchParentDirs( WCHAR* strSearchPath, int cchSearch, const WCHAR* strStartAt, WCHAR* strLeafName );
 INT_PTR CALLBACK DisplaySwitchToREFWarningProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 
@@ -331,7 +331,7 @@ bool DXUTFindMediaSearchTypicalDirs( WCHAR* strSearchPath, int cchSearch, LPCWST
 // Search parent directories starting at strStartAt, and appending strLeafName
 // at each parent directory.  It stops at the root directory.
 //--------------------------------------------------------------------------------------
-bool DXUTFindMediaSearchParentDirs( WCHAR* strSearchPath, int cchSearch, WCHAR* strStartAt, WCHAR* strLeafName )
+bool DXUTFindMediaSearchParentDirs( WCHAR* strSearchPath, int cchSearch, const WCHAR* strStartAt, WCHAR* strLeafName )
 {
     WCHAR strFullPath[MAX_PATH] = {0};
     WCHAR strFullFileName[MAX_PATH] = {0};

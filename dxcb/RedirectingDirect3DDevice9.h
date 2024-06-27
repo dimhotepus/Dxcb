@@ -10,8 +10,8 @@
 #include <d3d9.h>
 #include <d3dx9effect.h>
 
-#include <atomic>
 #include <algorithm>
+#include <atomic>
 
 #include "PREPROCESSED_RedirectingDirect3DDevice9.h"
 
@@ -257,7 +257,7 @@
                      type8, arg8, type9, arg9)                                 \
     return current_d3d9_device_->methodname(arg1, arg2, arg3, arg4, arg5,      \
                                             arg6, arg7, arg8, arg9);           \
-  }
+  }                                                                            \
 
 #define DXCB_OTHER_REDIRECTION_FUNC0(returntype, methodname) \
   DXCB_REDIRECTION_FUNC0(ULONG, methodname)
@@ -318,9 +318,8 @@ namespace dxcb {
 class RedirectingDirect3DDevice9 : public IDirect3DDevice9 {
  public:
   RedirectingDirect3DDevice9()
-      : real_d3d9_{nullptr},
+      : current_d3d9_device_{nullptr},
         real_d3d9_device_{nullptr},
-        current_d3d9_device_{nullptr},
         should_trace_{false} {}
   ~RedirectingDirect3DDevice9() = default;
 
@@ -633,15 +632,12 @@ class RedirectingEffectStateManager : public ID3DXEffectStateManager {
   void SetTrace(bool bval) { should_trace_ = bval; }
 
   // IUnknown
-  HRESULT __stdcall QueryInterface(REFIID iid, LPVOID *ppv) {
+  HRESULT __declspec(nothrow) __stdcall QueryInterface(REFIID iid,
+                                                       LPVOID *ppv) {
     return current_d3d9_device_->QueryInterface(iid, ppv);
   }
-  ULONG __stdcall AddRef() {
-    return ++ref_counter_;
-  }
-  ULONG __stdcall Release() {
-    return --ref_counter_;
-  }
+  ULONG __declspec(nothrow) __stdcall AddRef() { return ++ref_counter_; }
+  ULONG __declspec(nothrow) __stdcall Release() { return --ref_counter_; }
 
   // The following methods are called by the Effect when it wants to make
   // the corresponding device call.  Note that:

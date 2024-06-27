@@ -906,7 +906,7 @@ void OnRenderHWInstancing( IDirect3DDevice9* pd3dDevice, double fTime, float fEl
 #endif
     HRESULT hr;
     UINT iPass, cPasses;
-    static int tries = 0;
+    [[maybe_unused]] static int tries = 0;
     //SetVertexDeclaration, SetStreamSource and SetStreamSourceFreq test
     tries++;
     IDirect3DDevice9 *pd3dSavedDevice = pd3dDevice;

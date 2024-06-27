@@ -11,7 +11,7 @@
 #ifndef __D3DX10ASYNC_H__
 #define __D3DX10ASYNC_H__
 
-#include "d3dx10.h"
+#include "D3DX10.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -191,7 +191,7 @@ class CBMemoryBuffer {
     size_t* next{next_memory_};
 #endif
 
-    const alignas(T) size_t ret{*next_memory_};
+    alignas(DXCB_MAX(sizeof(T), sizeof(size_t))) const size_t ret{*next_memory_};
 
     next_memory_++;
 

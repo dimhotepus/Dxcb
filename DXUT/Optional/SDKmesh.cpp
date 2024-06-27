@@ -9,8 +9,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 #include "DXUT.h"
-#include "SDKMesh.h"
-#include "SDKMisc.h"
+#include "SDKmesh.h"
+#include "SDKmisc.h"
 
 //--------------------------------------------------------------------------------------
 void CDXUTSDKMesh::LoadMaterials( ID3D10Device* pd3dDevice, SDKMESH_MATERIAL* pMaterials, UINT numMaterials, SDKMESH_CALLBACKS10* pLoaderCallbacks )
@@ -849,18 +849,18 @@ CDXUTSDKMesh::CDXUTSDKMesh() :
 m_NumOutstandingResources(0),
 m_bLoading(false),
 m_hFile(0),
-m_hFileMappingObject(0),
-m_pMeshHeader(NULL),
+//m_hFileMappingObject(0),
 m_pStaticMeshData(NULL),
 m_pHeapData(NULL),
-m_pAdjacencyIndexBufferArray(NULL),
 m_pAnimationData(NULL),
 m_ppVertices(NULL),
 m_ppIndices(NULL),
-m_pBindPoseFrameMatrices(NULL),
-m_pTransformedFrameMatrices(NULL),
 m_pDev9(NULL),
-m_pDev10(NULL)
+m_pDev10(NULL),
+m_pMeshHeader(NULL),
+m_pAdjacencyIndexBufferArray(NULL),
+m_pBindPoseFrameMatrices(NULL),
+m_pTransformedFrameMatrices(NULL)
 {
 }
 

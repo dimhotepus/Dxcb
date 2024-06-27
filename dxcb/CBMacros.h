@@ -10,9 +10,15 @@
 
 #define DXCB_DEBUG_BREAK() __debugbreak()
 
+//#ifdef __clang__
+#define DXCB_FUNCTION
+//#else
+//#define DXCB_FUNCTION __FUNCTION__
+//#endif
+
 #define DXCB_NOT_IMPLEMENTED                                             \
   OutputDebugStringA(                                                    \
-      "CBD3D: " __FUNCTION__ " not implemented via command buffers.\n"); \
+      "CBD3D: " DXCB_FUNCTION " not implemented via command buffers.\n"); \
   DXCB_DEBUG_BREAK();
 #define DXCB_BOOL_NOT_IMPLEMENTED \
   {                               \
@@ -585,7 +591,7 @@
   void func() {                                                 \
     DXCB_FUNC_DEBUG_TRACE0();                                   \
     if (FAILED(d3d9_device_->name()))                           \
-      OutputDebugStringA(__FUNCTION__ " failed in playback\n"); \
+      OutputDebugStringA(DXCB_FUNCTION " failed in playback\n"); \
   }
 #define DXCB_STD_METHOD_PLAY1(func, name, type1)                \
   void func() {                                                 \
@@ -593,7 +599,7 @@
     type1 arg1;                                                 \
     buffer_->Get(&arg1);                                        \
     if (FAILED(d3d9_device_->name(arg1)))                       \
-      OutputDebugStringA(__FUNCTION__ " failed in playback\n"); \
+      OutputDebugStringA(DXCB_FUNCTION " failed in playback\n"); \
   }
 #define DXCB_STD_METHOD_PLAY2(func, name, type1, type2)         \
   void func() {                                                 \
@@ -603,7 +609,7 @@
     type2 arg2;                                                 \
     buffer_->Get(&arg2);                                        \
     if (FAILED(d3d9_device_->name(arg1, arg2)))                 \
-      OutputDebugStringA(__FUNCTION__ " failed in playback\n"); \
+      OutputDebugStringA(DXCB_FUNCTION " failed in playback\n"); \
   }
 #define DXCB_STD_METHOD_PLAY3(func, name, type1, type2, type3)  \
   void func() {                                                 \
@@ -615,7 +621,7 @@
     type3 arg3;                                                 \
     buffer_->Get(&arg3);                                        \
     if (FAILED(d3d9_device_->name(arg1, arg2, arg3)))           \
-      OutputDebugStringA(__FUNCTION__ " failed in playback\n"); \
+      OutputDebugStringA(DXCB_FUNCTION " failed in playback\n"); \
   }
 #define DXCB_STD_METHOD_PLAY4(func, name, type1, type2, type3, type4) \
   void func() {                                                       \
@@ -629,7 +635,7 @@
     type4 arg4;                                                       \
     buffer_->Get(&arg4);                                              \
     if (FAILED(d3d9_device_->name(arg1, arg2, arg3, arg4)))           \
-      OutputDebugStringA(__FUNCTION__ " failed in playback\n");       \
+      OutputDebugStringA(DXCB_FUNCTION " failed in playback\n");       \
   }
 #define DXCB_STD_METHOD_PLAY5(func, name, type1, type2, type3, type4, type5) \
   void func() {                                                              \
@@ -645,7 +651,7 @@
     type5 arg5;                                                              \
     buffer_->Get(&arg5);                                                     \
     if (FAILED(d3d9_device_->name(arg1, arg2, arg3, arg4, arg5)))            \
-      OutputDebugStringA(__FUNCTION__ " failed in playback\n");              \
+      OutputDebugStringA(DXCB_FUNCTION " failed in playback\n");              \
   }
 #define DXCB_STD_METHOD_PLAY6(func, name, type1, type2, type3, type4, type5, \
                               type6)                                         \
@@ -664,7 +670,7 @@
     type6 arg6;                                                              \
     buffer_->Get(&arg6);                                                     \
     if (FAILED(d3d9_device_->name(arg1, arg2, arg3, arg4, arg5, arg6)))      \
-      OutputDebugStringA(__FUNCTION__ " failed in playback\n");              \
+      OutputDebugStringA(DXCB_FUNCTION " failed in playback\n");              \
   }
 #define DXCB_STD_METHOD_PLAY7(func, name, type1, type2, type3, type4, type5,  \
                               type6, type7)                                   \
@@ -685,7 +691,7 @@
     type7 arg7;                                                               \
     buffer_->Get(&arg7);                                                      \
     if (FAILED(d3d9_device_->name(arg1, arg2, arg3, arg4, arg5, arg6, arg7))) \
-      OutputDebugStringA(__FUNCTION__ " failed in playback\n");               \
+      OutputDebugStringA(DXCB_FUNCTION " failed in playback\n");               \
   }
 #define DXCB_STD_METHOD_PLAY8(func, name, type1, type2, type3, type4, type5, \
                               type6, type7, type8)                           \
@@ -709,7 +715,7 @@
     buffer_->Get(&arg8);                                                     \
     if (FAILED(d3d9_device_->name(arg1, arg2, arg3, arg4, arg5, arg6, arg7,  \
                                   arg8)))                                    \
-      OutputDebugStringA(__FUNCTION__ " failed in playback\n");              \
+      OutputDebugStringA(DXCB_FUNCTION " failed in playback\n");              \
   }
 #define DXCB_STD_METHOD_PLAY9(func, name, type1, type2, type3, type4, type5, \
                               type6, type7, type8, type9)                    \
@@ -735,7 +741,7 @@
     buffer_->Get(&arg9);                                                     \
     if (FAILED(d3d9_device_->name(arg1, arg2, arg3, arg4, arg5, arg6, arg7,  \
                                   arg8, arg9)))                              \
-      OutputDebugStringA(__FUNCTION__ " failed in playback\n");              \
+      OutputDebugStringA(DXCB_FUNCTION " failed in playback\n");              \
   }
 #define DXCB_ULONG_METHOD_PLAY0(func, name) \
   void func() {                             \
@@ -758,7 +764,7 @@
     const size_t iSize{arg2 * 4 * sizeof(array_type)};               \
     type1 arg1{buffer_->Gets<std::remove_pointer_t<type1>>(iSize)};  \
     if (FAILED(d3d9_device_->name(arg0, arg1, arg2)))                \
-      OutputDebugStringA(__FUNCTION__ " failed in playback\n");      \
+      OutputDebugStringA(DXCB_FUNCTION " failed in playback\n");      \
   }
 
 //---------------------------------------------------------------------------
@@ -855,5 +861,8 @@
 
 using LPUINT = unsigned *;
 using LPD3DCAPS9 = struct _D3DCAPS9 *;
+
+#define DXCB_MIN(a, b) (((a) < (b)) ? (a) : (b))
+#define DXCB_MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 #endif  // DXCB_CBMACROS_H_

@@ -590,7 +590,7 @@ DXUTState& GetDXUTState()
 // Internal functions forward declarations
 //--------------------------------------------------------------------------------------
 void    DXUTParseCommandLine( WCHAR* strCommandLine );
-bool    DXUTIsNextArg( WCHAR*& strCmdLine, WCHAR* strArg );
+bool    DXUTIsNextArg( WCHAR*& strCmdLine, const WCHAR* strArg );
 bool    DXUTGetCmdParam( WCHAR*& strCmdLine, WCHAR* strFlag );
 void    DXUTAllowShortcutKeys( bool bAllowKeys );
 void    DXUTUpdateStaticFrameStats();
@@ -768,7 +768,7 @@ HRESULT WINAPI DXUTInit( bool bParseCommandLine, bool bShowMsgBoxOnError, WCHAR*
     SystemParametersInfo(SPI_GETTOGGLEKEYS, sizeof(TOGGLEKEYS), &tk, 0);
     GetDXUTState().SetStartupToggleKeys( tk );
 
-    FILTERKEYS fk = {sizeof(FILTERKEYS), 0};
+    FILTERKEYS fk = {sizeof(FILTERKEYS), 0, 0, 0, 0, 0};
     SystemParametersInfo(SPI_GETFILTERKEYS, sizeof(FILTERKEYS), &fk, 0);
     GetDXUTState().SetStartupFilterKeys( fk );
 
@@ -1014,7 +1014,7 @@ void DXUTParseCommandLine( WCHAR* strCommandLine )
 //--------------------------------------------------------------------------------------
 // Helper function for DXUTParseCommandLine
 //--------------------------------------------------------------------------------------
-bool DXUTIsNextArg( WCHAR*& strCmdLine, WCHAR* strArg )
+bool DXUTIsNextArg( WCHAR*& strCmdLine, const WCHAR* strArg )
 {
     int nArgLen = (int) wcslen(strArg);
     int nCmdLen = (int) wcslen(strCmdLine);
@@ -1385,7 +1385,7 @@ LRESULT CALLBACK DXUTStaticWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
                             dwFlags = GetDXUTState().GetCurrentDeviceSettings()->d3d10.PresentFlags;
 
                         IDXGISwapChain *pSwapChain = DXUTGetDXGISwapChain();
-                        hr = pSwapChain->Present( 0, GetDXUTState().GetCurrentDeviceSettings()->d3d10.PresentFlags );
+                        hr = pSwapChain->Present( 0, dwFlags );
                         if( DXGI_STATUS_OCCLUDED == hr )
                         {
                             // There is a window covering our entire rendering area.
@@ -1721,7 +1721,8 @@ LRESULT CALLBACK DXUTStaticWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
     // Don't allow the F10 key to act as a shortcut to the menu bar
     // by not passing these messages to the DefWindowProc only when
     // there's no menu present
-    if( !GetDXUTState().GetCallDefWindowProc() || GetDXUTState().GetMenu() == NULL && (uMsg == WM_SYSKEYDOWN || uMsg == WM_SYSKEYUP) && wParam == VK_F10 )
+    if( !GetDXUTState().GetCallDefWindowProc() ||
+        (GetDXUTState().GetMenu() == NULL && (uMsg == WM_SYSKEYDOWN || uMsg == WM_SYSKEYUP) && wParam == VK_F10) )
         return 0;
     else
         return DefWindowProc( hWnd, uMsg, wParam, lParam );
@@ -2377,7 +2378,7 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
             {
                 // Use wp.rcNormalPosition to get the client rect, but wp.rcNormalPosition 
                 // includes the window frame so subtract it
-                RECT rcFrame = {0};
+                RECT rcFrame = {};
                 AdjustWindowRect( &rcFrame, GetDXUTState().GetWindowedStyleAtModeChange(), GetDXUTState().GetMenu() != NULL );
                 LONG nFrameWidth = rcFrame.right - rcFrame.left;
                 LONG nFrameHeight = rcFrame.bottom - rcFrame.top;
@@ -2506,7 +2507,7 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
         else
         {      
             // Make a window rect with a client rect that is the same size as the backbuffer
-            RECT rcWindow = {0};
+            RECT rcWindow = {};
             rcWindow.right = (long)( DXUTGetBackBufferWidthFromDS(pNewDeviceSettings) );
             rcWindow.bottom = (long)( DXUTGetBackBufferHeightFromDS(pNewDeviceSettings) );
             AdjustWindowRect( &rcWindow, GetWindowLong( DXUTGetHWNDDeviceWindowed(), GWL_STYLE ), GetDXUTState().GetMenu() != NULL );
@@ -2881,9 +2882,8 @@ HRESULT DXUTCreate3DEnvironment9( IDirect3DDevice9* pd3dDeviceFromApp )
             for (UINT Adapter=0;Adapter<pD3D->GetAdapterCount();Adapter++)
             {
                 D3DADAPTER_IDENTIFIER9 Identifier;
-                HRESULT Res;
-                Res = pD3D->GetAdapterIdentifier(Adapter,0,&Identifier);
-                if (strstr(Identifier.Description,"PerfHUD") != 0)
+                HRESULT Res = pD3D->GetAdapterIdentifier(Adapter,0,&Identifier);
+                if (SUCCEEDED(Res) && strstr(Identifier.Description,"PerfHUD") != 0)
                 {
                     AdapterToUse=Adapter;
                     DeviceType=D3DDEVTYPE_REF;
@@ -3649,7 +3649,7 @@ HRESULT DXUTSetupD3D10Views( ID3D10Device* pd3dDevice, DXUTDeviceSettings* pDevi
     ID3D10RenderTargetView* pRTV = NULL;
 
     // Get the back buffer and desc
-    ID3D10Texture2D *pBackBuffer;
+    ID3D10Texture2D *pBackBuffer = NULL;
     hr = pSwapChain->GetBuffer( 0, __uuidof(*pBackBuffer), (LPVOID*)&pBackBuffer );
     if( FAILED(hr) )
         return hr;
@@ -5669,7 +5669,7 @@ void DXUTUpdateBackBufferDesc()
     else
     {
         HRESULT hr;
-        ID3D10Texture2D* pBackBuffer;
+        ID3D10Texture2D* pBackBuffer = NULL;
         hr = GetDXUTState().GetD3D10SwapChain()->GetBuffer( 0, __uuidof(*pBackBuffer), (LPVOID*)&pBackBuffer );
         DXGI_SURFACE_DESC* pBBufferSurfaceDesc = GetDXUTState().GetBackBufferSurfaceDesc10();
         ZeroMemory( pBBufferSurfaceDesc, sizeof(DXGI_SURFACE_DESC) );
@@ -5867,7 +5867,7 @@ void DXUTUpdateFrameStats()
 LPCWSTR WINAPI DXUTGetFrameStats( bool bShowFPS )                         
 { 
     WCHAR* pstrFrameStats = GetDXUTState().GetFrameStats();
-    WCHAR* pstrFPS = ( bShowFPS ) ? GetDXUTState().GetFPSStats() : L"";
+    const WCHAR* pstrFPS = ( bShowFPS ) ? GetDXUTState().GetFPSStats() : L"";
     StringCchPrintf( pstrFrameStats, 256, GetDXUTState().GetStaticFrameStats(), pstrFPS );
     return pstrFrameStats;
 }

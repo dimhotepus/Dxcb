@@ -262,7 +262,7 @@ void ShowSliders(bool bShow);
 
 void OutputHeader(FILE* pfile);
 void OutputData(FILE* pfile, int CPUBusyLoops, int DrawPrimitives, int Threads, float RenderCallCPUCost, float CPUBusyLoopsCost, float FPS, float SPF);
-bool OpenDataFile(char* fname);
+bool OpenDataFile(const char* fname);
 
 class AverageFPS
 {
@@ -592,17 +592,6 @@ HRESULT CALLBACK OnCreateDevice(IDirect3DDevice9* pd3dDevice, const D3DSURFACE_D
 	V_RETURN(D3DXCreateFont(pd3dDevice, 15, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET,
 		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
 		L"Arial", &g_pFont));
-
-	DWORD dwShaderFlags = D3DXFX_NOT_CLONEABLE;
-#if defined( DEBUG ) || defined( _DEBUG )
-	dwShaderFlags |= D3DXSHADER_DEBUG;
-#endif
-#ifdef DEBUG_VS
-	dwShaderFlags |= D3DXSHADER_FORCE_VS_SOFTWARE_NOOPT;
-#endif
-#ifdef DEBUG_PS
-	dwShaderFlags |= D3DXSHADER_FORCE_PS_SOFTWARE_NOOPT;
-#endif
 
 	// Read the D3DX effect file
 	WCHAR str[MAX_PATH];
@@ -1323,7 +1312,7 @@ void OutputData(FILE* pfile, int CPUBusyLoops, int DrawPrimitives, int Threads, 
 	}
 }
 
-bool OpenDataFile(char* fname)
+bool OpenDataFile(const char* fname)
 {
 	fopen_s(&g_pOutputFile, fname, "a");
 	if (g_pOutputFile) fprintf(g_pOutputFile, "\n");

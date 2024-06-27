@@ -3064,7 +3064,7 @@ void DXUTBuildOptimalD3D10DeviceSettings( DXUTD3D10DeviceSettings* pOptimalDevic
     ZeroMemory( pOptimalDeviceSettings, sizeof(DXUTD3D10DeviceSettings) );
 
     // Retrieve the desktop display mode.
-    DXGI_MODE_DESC adapterDesktopDisplayMode = { 640, 480, { 60, 1 }, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB };
+    DXGI_MODE_DESC adapterDesktopDisplayMode = { 640, 480, { 60, 1 }, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED, DXGI_MODE_SCALING_UNSPECIFIED };
     DXUTGetD3D10AdapterDisplayMode( pOptimalDeviceSettings->AdapterOrdinal, 0, &adapterDesktopDisplayMode );
 
     //---------------------
@@ -3644,7 +3644,7 @@ void DXUTBuildValidD3D10DeviceSettings( DXUTD3D10DeviceSettings* pValidDeviceSet
                 UINT Quality = pBestDeviceSettingsCombo->multiSampleQualityList.GetAt(i);
                 
                 // Check whether supported type is closer to the input than our current best
-                if( labs(Count - pDeviceSettingsIn->sd.SampleDesc.Count) < labs(bestMultiSampleCount - pDeviceSettingsIn->sd.SampleDesc.Count) )
+                if( labs((long)Count - (long)pDeviceSettingsIn->sd.SampleDesc.Count) < labs((long)bestMultiSampleCount - (long)pDeviceSettingsIn->sd.SampleDesc.Count) )
                 {
                     bestMultiSampleCount = Count;
                     bestMultiSampleQuality = __min( Quality - 1, pDeviceSettingsIn->sd.SampleDesc.Quality );

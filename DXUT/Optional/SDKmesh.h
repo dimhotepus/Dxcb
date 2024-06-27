@@ -304,7 +304,7 @@ private:
     bool							m_bLoading;
     //BYTE*                         m_pBufferData;
     HANDLE							m_hFile;
-    HANDLE						    m_hFileMappingObject;
+    //HANDLE						    m_hFileMappingObject;
     CGrowableArray<BYTE*>			m_MappedPointers;
     IDirect3DDevice9*				m_pDev9;
     ID3D10Device*					m_pDev10;

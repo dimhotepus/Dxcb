@@ -530,7 +530,7 @@ HRESULT CWaveFile::Write( UINT nSizeToWrite, BYTE* pbSrcData, UINT* pnSizeWrote 
         }
 
         *((BYTE*)m_mmioinfoOut.pchNext) = *((BYTE*)pbSrcData+cT);
-        (BYTE*)m_mmioinfoOut.pchNext++;
+        ++m_mmioinfoOut.pchNext;
 
         (*pnSizeWrote)++;
     }

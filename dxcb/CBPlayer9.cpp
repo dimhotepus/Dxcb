@@ -7,6 +7,7 @@
 
 #include <d3d9.h>
 
+#include <algorithm>
 #include <cassert>
 #include <cstdio>
 #include <type_traits>
@@ -120,9 +121,9 @@ void CBPlayer9::Playback(IDirect3DDevice9 *device, CBMemoryBuffer *buffer) {
 
   using D3d9Command = decltype(D3d9Commands::Null);
 
-  D3d9Command last_command{D3d9Commands::Null};
-  D3d9Command last_command2{D3d9Commands::Null};
-  size_t commands_count{0};
+  [[maybe_unused]] D3d9Command last_command{D3d9Commands::Null};
+  [[maybe_unused]] D3d9Command last_command2{D3d9Commands::Null};
+  [[maybe_unused]] size_t commands_count{0};
 
   bool is_parsing_command{true};
   while (is_parsing_command && buffer_->GetAvailableMemorySize() > 0) {

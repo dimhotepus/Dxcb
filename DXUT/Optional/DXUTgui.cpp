@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------------------
 #include "DXUT.h"
 #include "DXUTgui.h"
-#include "DXUTsettingsDlg.h"
+#include "DXUTsettingsdlg.h"
 #include "DXUTres.h"
 
 #undef min // use __min instead
@@ -3308,8 +3308,8 @@ bool CDXUTButton::HandleMouse( UINT uMsg, POINT pt, WPARAM wParam, LPARAM lParam
 //--------------------------------------------------------------------------------------
 void CDXUTButton::Render( float fElapsedTime )
 {
-    int nOffsetX = 0;
-    int nOffsetY = 0;
+    [[maybe_unused]] int nOffsetX = 0;
+    [[maybe_unused]] int nOffsetY = 0;
 
     DXUT_CONTROL_STATE iState = DXUT_STATE_NORMAL;
 
@@ -6352,7 +6352,7 @@ void CDXUTEditBox::ParseFloatArray( float *pNumbers, int nCount )
             ++pEnd;
 
         // Copy the token to our buffer
-        int nTokenLen = __min( sizeof(wszToken) / sizeof(wszToken[0]) - 1, int(pEnd - pToken) );
+        int nTokenLen = __min( sizeof(wszToken) / sizeof(wszToken[0]) - 1, ptrdiff_t(pEnd - pToken) );
         StringCchCopy( wszToken, nTokenLen, pToken );
         *pNumbers = (float)wcstod( wszToken, NULL );
         ++nWritten;
