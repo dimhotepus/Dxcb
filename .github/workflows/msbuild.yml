@@ -23,7 +23,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        platform: [x86, x64, ARM64]
+        platform: [Win32, x64, ARM64]
         configuration: [Debug, Release]
 
     steps:
